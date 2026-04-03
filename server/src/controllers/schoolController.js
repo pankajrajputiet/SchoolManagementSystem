@@ -21,10 +21,45 @@ exports.getActiveSchools = asyncHandler(async (req, res) => {
 // @route   POST /api/v1/schools
 // @access  Super Admin
 exports.createSchool = asyncHandler(async (req, res) => {
-  const school = await School.create(req.body);
+  console.log('=== CREATE SCHOOL ===');
+  console.log('Request body:', JSON.stringify(req.body, null, 2));
+  
+  const { adminName, adminEmail, adminPassword, ...schoolData } = req.body;
+  
+  console.log('Admin Name:', adminName);
+  console.log('Admin Email:', adminEmail);
+  console.log('Admin Password:', adminPassword);
+  console.log('School Data:', JSON.stringify(schoolData, null, 2));
+
+  // Create the school
+  const school = await School.create(schoolData);
+  
+  console.log('School created:', school._id);
+
+  // Create school admin user if admin credentials provided
+  let schoolAdmin = null;
+  if (adminName && adminEmail && adminPassword) {
+    console.log('Creating school admin user...');
+    schoolAdmin = await User.create({
+      name: adminName,
+      email: adminEmail,
+      password: adminPassword,
+      role: 'schooladmin',
+      schoolId: school._id,
+      phone: schoolData.phone || '',
+      isActive: true,
+    });
+    console.log('School admin created:', schoolAdmin._id);
+  } else {
+    console.log('No admin credentials provided');
+  }
 
   res.status(201).json(
-    new ApiResponse(201, school, 'School created successfully')
+    new ApiResponse(201, {
+      school,
+      adminCreated: !!schoolAdmin,
+      admin: schoolAdmin ? { id: schoolAdmin._id, name: schoolAdmin.name, email: schoolAdmin.email } : null,
+    }, 'School created successfully')
   );
 });
 

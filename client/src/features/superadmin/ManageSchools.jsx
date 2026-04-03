@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import {
   Box, Typography, Button, Dialog, DialogTitle, DialogContent,
-  DialogActions, TextField, MenuItem, Alert, Chip,
+  DialogActions, TextField, MenuItem, Alert, Chip, Divider,
 } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import AddIcon from '@mui/icons-material/Add';
@@ -23,6 +23,22 @@ const schema = yup.object({
   affiliatedBoard: yup.string().optional(),
   schoolType: yup.string().oneOf(['public', 'private', 'government', 'international']).default('private'),
   maxStudents: yup.number().integer().min(100).default(5000),
+  // Admin credentials (only required for new schools)
+  adminName: yup.string().when('$isNew', {
+    is: true,
+    then: (schema) => schema.required('Admin name is required'),
+    otherwise: (schema) => schema.optional(),
+  }),
+  adminEmail: yup.string().when('$isNew', {
+    is: true,
+    then: (schema) => schema.email('Invalid email').required('Admin email is required'),
+    otherwise: (schema) => schema.optional(),
+  }),
+  adminPassword: yup.string().when('$isNew', {
+    is: true,
+    then: (schema) => schema.min(6, 'Password must be at least 6 characters').required('Admin password is required'),
+    otherwise: (schema) => schema.optional(),
+  }),
 });
 
 const BOARDS = ['CBSE', 'ICSE', 'State Board', 'IB', 'IGCSE', 'Other'];
@@ -37,7 +53,8 @@ const ManageSchools = () => {
   const [success, setSuccess] = useState('');
 
   const { control, handleSubmit, reset } = useForm({
-    resolver: yupResolver(schema),
+    resolver: yupResolver(schema, { context: { isNew: !editSchool } }),
+    context: { isNew: !editSchool },
   });
 
   const fetchSchools = async () => {
@@ -67,6 +84,9 @@ const ManageSchools = () => {
       affiliatedBoard: '',
       schoolType: 'private',
       maxStudents: 5000,
+      adminName: '',
+      adminEmail: '',
+      adminPassword: '',
     });
     setFormOpen(true);
   };
@@ -82,6 +102,9 @@ const ManageSchools = () => {
       affiliatedBoard: school.affiliatedBoard || '',
       schoolType: school.schoolType || 'private',
       maxStudents: school.maxStudents || 5000,
+      adminName: '',
+      adminEmail: '',
+      adminPassword: '',
     });
     setFormOpen(true);
   };
@@ -234,6 +257,29 @@ const ManageSchools = () => {
             <Controller name="maxStudents" control={control} render={({ field }) => (
               <TextField fullWidth label="Max Students" type="number" {...field} />
             )} />
+
+            {/* Admin Credentials Section - Only for new schools */}
+            {!editSchool && (
+              <>
+                <Divider sx={{ my: 1 }} />
+                <Typography variant="h6" color="primary">School Admin Credentials</Typography>
+                <Typography variant="caption" color="text.secondary" sx={{ display: 'block', mb: 1 }}>
+                  Create an admin account for this school
+                </Typography>
+                
+                <Controller name="adminName" control={control} render={({ field }) => (
+                  <TextField fullWidth label="Admin Name" {...field} required />
+                )} />
+                
+                <Controller name="adminEmail" control={control} render={({ field }) => (
+                  <TextField fullWidth label="Admin Email" type="email" {...field} required />
+                )} />
+                
+                <Controller name="adminPassword" control={control} render={({ field }) => (
+                  <TextField fullWidth label="Admin Password" type="password" {...field} required />
+                )} />
+              </>
+            )}
           </DialogContent>
           
           <DialogActions>

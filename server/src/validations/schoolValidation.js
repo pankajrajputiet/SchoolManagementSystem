@@ -35,6 +35,10 @@ const createSchool = Joi.object({
     autoAttendance: Joi.boolean().optional(),
     gradingScale: Joi.string().optional(),
   }).optional(),
+  // Admin user credentials for the school
+  adminName: Joi.string().optional().trim().max(100),
+  adminEmail: Joi.string().optional().email().lowercase(),
+  adminPassword: Joi.string().optional().min(6),
 });
 
 const updateSchool = Joi.object({
