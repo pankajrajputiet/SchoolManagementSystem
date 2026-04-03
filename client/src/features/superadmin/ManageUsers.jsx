@@ -16,7 +16,9 @@ const ManageUsers = () => {
   const fetchUsers = async () => {
     try {
       const response = await axiosInstance.get('/users?limit=100');
-      setUsers(response.data.data.data || []);
+      // API returns { success, message, data: { data: users, pagination }, statusCode }
+      const usersData = response.data.data?.data || response.data.data || [];
+      setUsers(usersData);
     } catch (err) {
       console.error('Failed to fetch users:', err);
     } finally {

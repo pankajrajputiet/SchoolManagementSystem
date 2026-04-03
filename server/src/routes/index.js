@@ -12,6 +12,8 @@ const notificationRoutes = require('./notificationRoutes');
 const assignmentRoutes = require('./assignmentRoutes');
 const smsRoutes = require('./smsRoutes');
 const feeRoutes = require('./feeRoutes');
+const salaryRoutes = require('./salaryRoutes');
+const userRoutes = require('./userRoutes');
 
 router.use('/auth', authRoutes);
 router.use('/schools', schoolRoutes);
@@ -25,5 +27,7 @@ router.use('/notifications', notificationRoutes);
 router.use('/assignments', assignmentRoutes);
 router.use('/sms', smsRoutes);
 router.use('/fees', feeRoutes);
+router.use('/salary', salaryRoutes);
+router.use('/users', userRoutes);
 
 module.exports = router;

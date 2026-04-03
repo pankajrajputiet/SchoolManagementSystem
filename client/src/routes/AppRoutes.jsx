@@ -22,6 +22,8 @@ import SendSMS from '@/features/notifications/SendSMS';
 import SMSHistory from '@/features/notifications/SMSHistory';
 import SMSStats from '@/features/notifications/SMSStats';
 import FeeManagement from '@/features/admin/FeeManagement';
+import SalaryManagement from '@/features/admin/SalaryManagement';
+import SalaryStructure from '@/features/admin/SalaryStructure';
 import SuperAdminDashboard from '@/features/admin/SuperAdminDashboard';
 import ManageSchools from '@/features/superadmin/ManageSchools';
 import ManageUsers from '@/features/superadmin/ManageUsers';
@@ -84,6 +86,8 @@ const AppRoutes = () => {
             <Route path="/admin/teachers" element={<ManageTeachers />} />
             <Route path="/admin/classes" element={<ManageClasses />} />
             <Route path="/admin/fees" element={<FeeManagement />} />
+            <Route path="/admin/salary" element={<SalaryManagement />} />
+            <Route path="/admin/salary-structure" element={<SalaryStructure />} />
             <Route path="/admin/reports" element={<Reports />} />
             <Route path="/admin/sms" element={<SendSMS />} />
             <Route path="/admin/sms-history" element={<SMSHistory />} />

@@ -6,6 +6,8 @@ const Student = require('./src/models/Student');
 const Teacher = require('./src/models/Teacher');
 const FeeStructure = require('./src/models/FeeStructure');
 const FeePayment = require('./src/models/FeePayment');
+const SalaryStructure = require('./src/models/SalaryStructure');
+const SalaryPayment = require('./src/models/SalaryPayment');
 const bcrypt = require('bcryptjs');
 const logger = require('./src/config/logger');
 
@@ -207,6 +209,16 @@ const seedDummyData = async () => {
       
       for (const cls of classes) {
         for (const feeType of feeTypes) {
+          // Check if fee structure already exists
+          const existingFee = await FeeStructure.findOne({
+            schoolId: school._id,
+            class: cls._id,
+            feeType: feeType.type,
+            academicYear: '2024-2025',
+          });
+
+          if (existingFee) continue;
+
           const feeStructure = await FeeStructure.create({
             schoolId: school._id,
             class: cls._id,
@@ -255,6 +267,124 @@ const seedDummyData = async () => {
               paymentDate: status === 'paid' ? new Date('2024-04-10') : null,
             });
           }
+        }
+      }
+    }
+
+    // Create salary structures and payment records for each school
+    const salaryStructures = [
+      {
+        staffType: 'teacher',
+        designation: 'Primary Teacher',
+        basicSalary: 25000,
+        allowances: { hra: 10000, da: 5000, ta: 2000, medical: 1500, special: 1000 },
+        deductions: { pf: 3000, tax: 2000, esi: 500, other: 0 },
+        effectiveFrom: new Date('2024-01-01'),
+      },
+      {
+        staffType: 'teacher',
+        designation: 'Trained Graduate Teacher',
+        basicSalary: 35000,
+        allowances: { hra: 14000, da: 7000, ta: 3000, medical: 2000, special: 2000 },
+        deductions: { pf: 4200, tax: 3500, esi: 700, other: 0 },
+        effectiveFrom: new Date('2024-01-01'),
+      },
+      {
+        staffType: 'teacher',
+        designation: 'Post Graduate Teacher',
+        basicSalary: 45000,
+        allowances: { hra: 18000, da: 9000, ta: 4000, medical: 2500, special: 3000 },
+        deductions: { pf: 5400, tax: 5000, esi: 900, other: 0 },
+        effectiveFrom: new Date('2024-01-01'),
+      },
+      {
+        staffType: 'admin_staff',
+        designation: 'Principal',
+        basicSalary: 60000,
+        allowances: { hra: 24000, da: 12000, ta: 5000, medical: 3000, special: 5000 },
+        deductions: { pf: 7200, tax: 8000, esi: 1200, other: 0 },
+        effectiveFrom: new Date('2024-01-01'),
+      },
+      {
+        staffType: 'admin_staff',
+        designation: 'Clerk',
+        basicSalary: 18000,
+        allowances: { hra: 7200, da: 3600, ta: 1500, medical: 1000, special: 500 },
+        deductions: { pf: 2160, tax: 1500, esi: 360, other: 0 },
+        effectiveFrom: new Date('2024-01-01'),
+      },
+      {
+        staffType: 'support_staff',
+        designation: 'Peon',
+        basicSalary: 12000,
+        allowances: { hra: 4800, da: 2400, ta: 1000, medical: 800, special: 0 },
+        deductions: { pf: 1440, tax: 0, esi: 240, other: 0 },
+        effectiveFrom: new Date('2024-01-01'),
+      },
+    ];
+
+    for (const school of createdSchools) {
+      // Create salary structures
+      for (const structureData of salaryStructures) {
+        await SalaryStructure.create({
+          schoolId: school._id,
+          ...structureData,
+        });
+      }
+
+      // Create salary payment records for teachers
+      const teachers = await Teacher.find({ schoolId: school._id });
+      const currentMonth = new Date().getMonth() + 1;
+      const currentYear = new Date().getFullYear();
+
+      for (const teacher of teachers) {
+        // Assign salary based on some pattern (using index to vary)
+        const structureIndex = teachers.indexOf(teacher) % 3; // 0, 1, 2 for the 3 teacher structures
+        const structures = ['Primary Teacher', 'Trained Graduate Teacher', 'Post Graduate Teacher'];
+        const designation = structures[structureIndex];
+        
+        const salaryStructure = await SalaryStructure.findOne({
+          schoolId: school._id,
+          staffType: 'teacher',
+          designation,
+        });
+
+        if (salaryStructure) {
+          const rand = Math.random();
+          let status, paidAmount;
+          
+          if (rand < 0.4) {
+            // 40% fully paid
+            status = 'paid';
+            paidAmount = salaryStructure.netSalary;
+          } else if (rand < 0.6) {
+            // 20% partially paid
+            status = 'partial';
+            paidAmount = salaryStructure.netSalary * 0.5;
+          } else {
+            // 40% pending
+            status = 'pending';
+            paidAmount = 0;
+          }
+
+          await SalaryPayment.create({
+            schoolId: school._id,
+            staff: teacher._id,
+            staffType: 'teacher',
+            designation: salaryStructure.designation,
+            month: currentMonth,
+            year: currentYear,
+            basicSalary: salaryStructure.basicSalary,
+            allowances: salaryStructure.allowances,
+            deductions: salaryStructure.deductions,
+            grossSalary: salaryStructure.grossSalary,
+            netSalary: salaryStructure.netSalary,
+            paidAmount,
+            status,
+            paymentMethod: status === 'paid' ? 'bank_transfer' : null,
+            paymentDate: status === 'paid' ? new Date(`${currentYear}-${currentMonth.toString().padStart(2, '0')}-05`) : null,
+            bankAccountNumber: status === 'paid' ? `ACC${Math.random().toString(36).substr(2, 9).toUpperCase()}` : null,
+          });
         }
       }
     }

@@ -12,13 +12,13 @@ router.get('/me', role(ROLES.TEACHER), teacherController.getMyProfile);
 
 router
   .route('/')
-  .post(role(ROLES.ADMIN), validate(teacherValidation.createTeacher), teacherController.create)
-  .get(role(ROLES.ADMIN), teacherController.getAll);
+  .post(role(ROLES.ADMIN, ROLES.SCHOOL_ADMIN), validate(teacherValidation.createTeacher), teacherController.create)
+  .get(role(ROLES.ADMIN, ROLES.SCHOOL_ADMIN), teacherController.getAll);
 
 router
   .route('/:id')
-  .get(role(ROLES.ADMIN, ROLES.TEACHER), teacherController.getById)
-  .put(role(ROLES.ADMIN), validate(teacherValidation.updateTeacher), teacherController.update)
-  .delete(role(ROLES.ADMIN), teacherController.remove);
+  .get(role(ROLES.ADMIN, ROLES.SCHOOL_ADMIN, ROLES.TEACHER), teacherController.getById)
+  .put(role(ROLES.ADMIN, ROLES.SCHOOL_ADMIN), validate(teacherValidation.updateTeacher), teacherController.update)
+  .delete(role(ROLES.ADMIN, ROLES.SCHOOL_ADMIN), teacherController.remove);
 
 module.exports = router;

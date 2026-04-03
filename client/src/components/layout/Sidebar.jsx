@@ -26,6 +26,7 @@ import BarChartIcon from '@mui/icons-material/BarChart';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import SettingsIcon from '@mui/icons-material/Settings';
 import PaymentsIcon from '@mui/icons-material/Payments';
+import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import useAuth from '@/hooks/useAuth';
 import { ROLES } from '@/utils/constants';
 
@@ -45,6 +46,8 @@ const adminNav = [
   { label: 'Teachers', path: '/admin/teachers', icon: <SchoolIcon /> },
   { label: 'Classes', path: '/admin/classes', icon: <ClassIcon /> },
   { label: 'Fees', path: '/admin/fees', icon: <PaymentsIcon /> },
+  { label: 'Salary', path: '/admin/salary', icon: <AccountBalanceWalletIcon /> },
+  { label: 'Salary Structure', path: '/admin/salary-structure', icon: <AssessmentIcon /> },
   { label: 'Reports', path: '/admin/reports', icon: <AssessmentIcon /> },
   { label: 'Send SMS', path: '/admin/sms', icon: <SmsIcon /> },
   { label: 'SMS History', path: '/admin/sms-history', icon: <HistoryIcon /> },

@@ -121,9 +121,7 @@ const LoginPage = () => {
           </form>
 
           <Typography variant="caption" className="block text-center mt-4" color="text.secondary">
-            Super Admin: superadmin@schoolmanagement.com / SuperAdmin@123
-            <br />
-            School Admin: admin@demosschool.com / SchoolAdmin@123
+            Default admin: admin@school.com / Admin@123456
           </Typography>
         </CardContent>
       </Card>
