@@ -18,6 +18,9 @@ import ViewAttendance from '@/features/student/ViewAttendance';
 import ViewMarks from '@/features/student/ViewMarks';
 import StudentProfile from '@/features/student/StudentProfile';
 import StudentAssignments from '@/features/student/ViewAssignments';
+import SendSMS from '@/features/notifications/SendSMS';
+import SMSHistory from '@/features/notifications/SMSHistory';
+import SMSStats from '@/features/notifications/SMSStats';
 import { ROLES } from '@/utils/constants';
 import { Typography, Box, Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
@@ -66,6 +69,9 @@ const AppRoutes = () => {
             <Route path="/admin/teachers" element={<ManageTeachers />} />
             <Route path="/admin/classes" element={<ManageClasses />} />
             <Route path="/admin/reports" element={<Reports />} />
+            <Route path="/admin/sms" element={<SendSMS />} />
+            <Route path="/admin/sms-history" element={<SMSHistory />} />
+            <Route path="/admin/sms-stats" element={<SMSStats />} />
           </Route>
 
           {/* Teacher routes */}
@@ -75,6 +81,7 @@ const AppRoutes = () => {
             <Route path="/teacher/marks" element={<UploadMarks />} />
             <Route path="/teacher/classes" element={<ViewClasses />} />
             <Route path="/teacher/assignments" element={<TeacherAssignments />} />
+            <Route path="/teacher/sms" element={<SendSMS />} />
           </Route>
 
           {/* Student routes */}

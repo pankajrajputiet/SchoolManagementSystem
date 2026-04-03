@@ -20,6 +20,9 @@ import GradingIcon from '@mui/icons-material/Grading';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import PersonIcon from '@mui/icons-material/Person';
 import NotificationsIcon from '@mui/icons-material/Notifications';
+import SmsIcon from '@mui/icons-material/Sms';
+import HistoryIcon from '@mui/icons-material/History';
+import BarChartIcon from '@mui/icons-material/BarChart';
 import useAuth from '@/hooks/useAuth';
 import { ROLES } from '@/utils/constants';
 
@@ -31,6 +34,9 @@ const adminNav = [
   { label: 'Teachers', path: '/admin/teachers', icon: <SchoolIcon /> },
   { label: 'Classes', path: '/admin/classes', icon: <ClassIcon /> },
   { label: 'Reports', path: '/admin/reports', icon: <AssessmentIcon /> },
+  { label: 'Send SMS', path: '/admin/sms', icon: <SmsIcon /> },
+  { label: 'SMS History', path: '/admin/sms-history', icon: <HistoryIcon /> },
+  { label: 'SMS Stats', path: '/admin/sms-stats', icon: <BarChartIcon /> },
 ];
 
 const teacherNav = [
@@ -39,6 +45,7 @@ const teacherNav = [
   { label: 'Marks', path: '/teacher/marks', icon: <GradingIcon /> },
   { label: 'My Classes', path: '/teacher/classes', icon: <ClassIcon /> },
   { label: 'Assignments', path: '/teacher/assignments', icon: <AssignmentIcon /> },
+  { label: 'Send SMS', path: '/teacher/sms', icon: <SmsIcon /> },
 ];
 
 const studentNav = [

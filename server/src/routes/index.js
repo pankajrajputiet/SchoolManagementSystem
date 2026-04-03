@@ -9,6 +9,7 @@ const attendanceRoutes = require('./attendanceRoutes');
 const markRoutes = require('./markRoutes');
 const notificationRoutes = require('./notificationRoutes');
 const assignmentRoutes = require('./assignmentRoutes');
+const smsRoutes = require('./smsRoutes');
 
 router.use('/auth', authRoutes);
 router.use('/students', studentRoutes);
@@ -19,5 +20,6 @@ router.use('/attendance', attendanceRoutes);
 router.use('/marks', markRoutes);
 router.use('/notifications', notificationRoutes);
 router.use('/assignments', assignmentRoutes);
+router.use('/sms', smsRoutes);
 
 module.exports = router;
