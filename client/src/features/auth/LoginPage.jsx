@@ -13,7 +13,10 @@ import {
   Typography,
   Alert,
   CircularProgress,
+  Avatar,
+  Divider,
 } from '@mui/material';
+import BusinessIcon from '@mui/icons-material/Business';
 import { useLoginMutation } from './authApiSlice';
 import { setCredentials } from './authSlice';
 
@@ -44,7 +47,6 @@ const LoginPage = () => {
       dispatch(setCredentials({ user: res.data.user, token: res.data.token }));
       const role = res.data.user.role;
       
-      // Map roles to their dashboard routes
       let dashboardPath;
       switch (role) {
         case 'superadmin':
@@ -71,27 +73,48 @@ const LoginPage = () => {
   };
 
   return (
-    <Box className="flex items-center justify-center min-h-screen bg-gray-100">
+    <Box
+      sx={{
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        minHeight: '100vh',
+        background: 'linear-gradient(135deg, #f0f4ff 0%, #e0e7ff 100%)',
+      }}
+    >
       <Card sx={{ maxWidth: 420, width: '100%', mx: 2 }}>
-        <CardContent className="p-8">
-          <Typography variant="h4" className="text-center mb-2" fontWeight="bold">
-            School Management
-          </Typography>
-          <Typography
-            variant="body2"
-            color="text.secondary"
-            className="text-center mb-6"
-          >
-            Sign in to your account
-          </Typography>
+        <CardContent sx={{ p: 4 }}>
+          {/* Company Name */}
+          <Box sx={{ textAlign: 'center', mb: 3 }}>
+            <Avatar
+              sx={{
+                width: 80,
+                height: 80,
+                mx: 'auto',
+                mb: 2,
+                bgcolor: 'primary.main',
+              }}
+              variant="rounded"
+            >
+              <BusinessIcon sx={{ fontSize: 40 }} />
+            </Avatar>
+            <Typography variant="h4" fontWeight="bold" color="primary">
+              School Management
+            </Typography>
+            <Typography variant="subtitle1" color="text.secondary">
+              Enterprise Portal
+            </Typography>
+          </Box>
+
+          <Divider sx={{ mb: 3 }} />
 
           {error && (
-            <Alert severity="error" className="mb-4">
+            <Alert severity="error" sx={{ mb: 3 }}>
               {error}
             </Alert>
           )}
 
-          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+          <form onSubmit={handleSubmit(onSubmit)}>
             <TextField
               fullWidth
               label="Email"
@@ -99,6 +122,7 @@ const LoginPage = () => {
               {...register('email')}
               error={!!errors.email}
               helperText={errors.email?.message}
+              sx={{ mb: 2 }}
             />
             <TextField
               fullWidth
@@ -107,6 +131,7 @@ const LoginPage = () => {
               {...register('password')}
               error={!!errors.password}
               helperText={errors.password?.message}
+              sx={{ mb: 2 }}
             />
             <Button
               type="submit"
@@ -120,9 +145,24 @@ const LoginPage = () => {
             </Button>
           </form>
 
-          <Typography variant="caption" className="block text-center mt-4" color="text.secondary">
-            Default admin: admin@school.com / Admin@123456
-          </Typography>
+          {/* Demo Credentials */}
+          <Box
+            sx={{
+              mt: 3,
+              p: 2,
+              bgcolor: 'grey.50',
+              borderRadius: 1,
+              textAlign: 'center',
+            }}
+          >
+            <Typography variant="caption" color="text.secondary">
+              <strong>Super Admin:</strong> superadmin@schoolmanagement.com / SuperAdmin@123
+            </Typography>
+            <br />
+            <Typography variant="caption" color="text.secondary">
+              <strong>School Admin:</strong> admin@demosschool.com / SchoolAdmin@123
+            </Typography>
+          </Box>
         </CardContent>
       </Card>
     </Box>

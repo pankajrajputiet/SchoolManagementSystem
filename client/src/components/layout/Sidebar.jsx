@@ -1,4 +1,5 @@
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 import {
   Drawer,
   List,
@@ -9,28 +10,29 @@ import {
   Toolbar,
   Typography,
   Box,
+  Avatar,
+  Divider,
 } from '@mui/material';
+import SchoolIcon from '@mui/icons-material/School';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import PeopleIcon from '@mui/icons-material/People';
-import SchoolIcon from '@mui/icons-material/School';
 import ClassIcon from '@mui/icons-material/Class';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import EventNoteIcon from '@mui/icons-material/EventNote';
 import GradingIcon from '@mui/icons-material/Grading';
 import AssessmentIcon from '@mui/icons-material/Assessment';
 import PersonIcon from '@mui/icons-material/Person';
-import NotificationsIcon from '@mui/icons-material/Notifications';
 import SmsIcon from '@mui/icons-material/Sms';
 import HistoryIcon from '@mui/icons-material/History';
 import BarChartIcon from '@mui/icons-material/BarChart';
-import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import SettingsIcon from '@mui/icons-material/Settings';
 import PaymentsIcon from '@mui/icons-material/Payments';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import useAuth from '@/hooks/useAuth';
 import { ROLES } from '@/utils/constants';
+import apiSlice from '@/api/apiSlice';
 
-const DRAWER_WIDTH = 240;
+const DRAWER_WIDTH = 260;
 
 const superAdminNav = [
   { label: 'Dashboard', path: '/superadmin/dashboard', icon: <DashboardIcon /> },
@@ -72,9 +74,32 @@ const studentNav = [
 ];
 
 const Sidebar = ({ open, onClose, variant = 'permanent' }) => {
-  const { role } = useAuth();
+  const { role, user } = useAuth();
   const location = useLocation();
   const navigate = useNavigate();
+  const [schoolInfo, setSchoolInfo] = useState(null);
+
+  // Fetch school info for non-super-admin users
+  useEffect(() => {
+    const fetchSchoolInfo = async () => {
+      if (role === ROLES.SUPER_ADMIN) {
+        setSchoolInfo(null);
+        return;
+      }
+
+      if (user?.schoolId) {
+        try {
+          const response = await apiSlice.get(`/schools/${user.schoolId}`);
+          const schoolData = response.data.data || response.data.message;
+          setSchoolInfo(schoolData);
+        } catch (err) {
+          console.error('Failed to fetch school info:', err);
+        }
+      }
+    };
+
+    fetchSchoolInfo();
+  }, [role, user]);
 
   const getNavItems = () => {
     switch (role) {
@@ -94,13 +119,81 @@ const Sidebar = ({ open, onClose, variant = 'permanent' }) => {
 
   const navItems = getNavItems();
 
+  // Render school logo and name header
+  const renderSchoolHeader = () => {
+    if (role === ROLES.SUPER_ADMIN) {
+      return (
+        <Box className="text-center py-3 px-2 bg-gradient-to-r from-blue-600 to-indigo-600">
+          <Avatar
+            sx={{ 
+              width: 48, 
+              height: 48, 
+              mx: 'auto', 
+              mb: 1, 
+              bgcolor: 'white',
+              color: 'primary.main'
+            }}
+          >
+            <SchoolIcon sx={{ fontSize: 28 }} />
+          </Avatar>
+          <Typography 
+            variant="subtitle1" 
+            className="font-bold text-white"
+            noWrap
+          >
+            School Management
+          </Typography>
+          <Typography variant="caption" className="text-blue-100">
+            Super Admin Portal
+          </Typography>
+        </Box>
+      );
+    }
+
+    // School-specific header with logo
+    return (
+      <Box className="text-center py-3 px-2 bg-gradient-to-r from-blue-600 to-indigo-600">
+        {schoolInfo?.logo ? (
+          <Avatar
+            sx={{ width: 48, height: 48, mx: 'auto', mb: 1 }}
+            src={schoolInfo.logo}
+            variant="rounded"
+          />
+        ) : (
+          <Avatar
+            sx={{ 
+              width: 48, 
+              height: 48, 
+              mx: 'auto', 
+              mb: 1, 
+              bgcolor: 'white',
+              color: 'primary.main'
+            }}
+            variant="rounded"
+          >
+            <SchoolIcon sx={{ fontSize: 28 }} />
+          </Avatar>
+        )}
+        <Typography 
+          variant="subtitle1" 
+          className="font-bold text-white"
+          noWrap
+        >
+          {schoolInfo?.name || 'School'}
+        </Typography>
+        {schoolInfo?.code && (
+          <Typography variant="caption" className="text-blue-100">
+            {schoolInfo.code}
+          </Typography>
+        )}
+      </Box>
+    );
+  };
+
   const drawerContent = (
     <Box>
-      <Toolbar>
-        <Typography variant="h6" noWrap className="font-bold text-blue-800">
-          SMS
-        </Typography>
-      </Toolbar>
+      {renderSchoolHeader()}
+      <Divider />
       <List>
         {navItems.map((item) => (
           <ListItem key={item.path} disablePadding>

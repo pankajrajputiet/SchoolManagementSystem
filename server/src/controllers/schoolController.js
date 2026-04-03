@@ -4,6 +4,19 @@ const asyncHandler = require('../utils/asyncHandler');
 const ApiError = require('../utils/ApiError');
 const ApiResponse = require('../utils/ApiResponse');
 
+// @desc    Get active schools (Public - for login page)
+// @route   GET /api/v1/schools/list
+// @access  Public
+exports.getActiveSchools = asyncHandler(async (req, res) => {
+  const schools = await School.find({ isActive: true })
+    .select('name code logo address phone email')
+    .sort({ name: 1 });
+
+  res.status(200).json(
+    new ApiResponse(200, schools, 'Active schools fetched successfully')
+  );
+});
+
 // @desc    Create a new school (Super Admin only)
 // @route   POST /api/v1/schools
 // @access  Super Admin

@@ -7,7 +7,10 @@ const { schoolAccess, superAdminOnly } = require('../middlewares/school');
 const { createSchool, updateSchool } = require('../validations/schoolValidation');
 const { ROLES } = require('../constants');
 
-// All routes require authentication
+// Public route - list active schools (for login page)
+router.get('/list', schoolController.getActiveSchools);
+
+// All routes AFTER this require authentication
 router.use(auth);
 
 // Get current user's school (for non-super admins)
