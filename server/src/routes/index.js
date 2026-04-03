@@ -11,6 +11,7 @@ const markRoutes = require('./markRoutes');
 const notificationRoutes = require('./notificationRoutes');
 const assignmentRoutes = require('./assignmentRoutes');
 const smsRoutes = require('./smsRoutes');
+const feeRoutes = require('./feeRoutes');
 
 router.use('/auth', authRoutes);
 router.use('/schools', schoolRoutes);
@@ -23,5 +24,6 @@ router.use('/marks', markRoutes);
 router.use('/notifications', notificationRoutes);
 router.use('/assignments', assignmentRoutes);
 router.use('/sms', smsRoutes);
+router.use('/fees', feeRoutes);
 
 module.exports = router;

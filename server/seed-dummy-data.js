@@ -4,6 +4,8 @@ const Class = require('./src/models/Class');
 const Subject = require('./src/models/Subject');
 const Student = require('./src/models/Student');
 const Teacher = require('./src/models/Teacher');
+const FeeStructure = require('./src/models/FeeStructure');
+const FeePayment = require('./src/models/FeePayment');
 const bcrypt = require('bcryptjs');
 const logger = require('./src/config/logger');
 
@@ -186,6 +188,71 @@ const seedDummyData = async () => {
               code: `${subjName.substring(0, 3).toUpperCase()}_${cls.name}${cls.section}`,
               class: cls._id,
               type: 'theory',
+            });
+          }
+        }
+      }
+    }
+
+    // Create fee structures and payment records for each school
+    const feeTypes = [
+      { type: 'tuition', amount: 5000, description: 'Monthly tuition fee' },
+      { type: 'transport', amount: 2000, description: 'Transportation fee' },
+      { type: 'library', amount: 500, description: 'Library fee' },
+      { type: 'sports', amount: 300, description: 'Sports and activities fee' },
+    ];
+
+    for (const school of createdSchools) {
+      const classes = await Class.find({ schoolId: school._id });
+      
+      for (const cls of classes) {
+        for (const feeType of feeTypes) {
+          const feeStructure = await FeeStructure.create({
+            schoolId: school._id,
+            class: cls._id,
+            feeType: feeType.type,
+            amount: feeType.amount,
+            academicYear: '2024-2025',
+            description: feeType.description,
+            dueDate: new Date('2024-04-15'),
+            installmentNumber: 1,
+          });
+
+          // Get students in this class
+          const students = await Student.find({ class: cls._id, schoolId: school._id });
+          
+          // Create fee payment records for each student
+          for (const student of students) {
+            // Randomly assign different payment statuses
+            const rand = Math.random();
+            let status, amountPaid;
+            
+            if (rand < 0.3) {
+              // 30% fully paid
+              status = 'paid';
+              amountPaid = feeType.amount;
+            } else if (rand < 0.5) {
+              // 20% partially paid
+              status = 'partial';
+              amountPaid = feeType.amount * 0.5;
+            } else {
+              // 50% pending
+              status = 'pending';
+              amountPaid = 0;
+            }
+
+            await FeePayment.create({
+              schoolId: school._id,
+              student: student._id,
+              feeStructure: feeStructure._id,
+              feeType: feeType.type,
+              amount: feeType.amount,
+              amountPaid,
+              academicYear: '2024-2025',
+              dueDate: new Date('2024-04-15'),
+              status,
+              paymentMethod: status === 'paid' ? 'online' : null,
+              paymentDate: status === 'paid' ? new Date('2024-04-10') : null,
             });
           }
         }

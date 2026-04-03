@@ -36,6 +36,7 @@ const apiSlice = createApi({
     'Assignment',
     'Notification',
     'User',
+    'Fee',
   ],
   endpoints: () => ({}),
 });

@@ -25,6 +25,7 @@ import HistoryIcon from '@mui/icons-material/History';
 import BarChartIcon from '@mui/icons-material/BarChart';
 import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
 import SettingsIcon from '@mui/icons-material/Settings';
+import PaymentsIcon from '@mui/icons-material/Payments';
 import useAuth from '@/hooks/useAuth';
 import { ROLES } from '@/utils/constants';
 
@@ -43,6 +44,7 @@ const adminNav = [
   { label: 'Students', path: '/admin/students', icon: <PeopleIcon /> },
   { label: 'Teachers', path: '/admin/teachers', icon: <SchoolIcon /> },
   { label: 'Classes', path: '/admin/classes', icon: <ClassIcon /> },
+  { label: 'Fees', path: '/admin/fees', icon: <PaymentsIcon /> },
   { label: 'Reports', path: '/admin/reports', icon: <AssessmentIcon /> },
   { label: 'Send SMS', path: '/admin/sms', icon: <SmsIcon /> },
   { label: 'SMS History', path: '/admin/sms-history', icon: <HistoryIcon /> },
