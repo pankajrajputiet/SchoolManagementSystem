@@ -44,8 +44,12 @@ const LoginPage = () => {
     try {
       setError('');
       const res = await login(data).unwrap();
-      dispatch(setCredentials({ user: res.data.user, token: res.data.token }));
-      const role = res.data.user.role;
+      
+      // Backend returns: { success: true, message: { user, token }, data: "Login successful" }
+      const { user, token } = res.message || res.data;
+      
+      dispatch(setCredentials({ user, token }));
+      const role = user.role;
       
       let dashboardPath;
       switch (role) {
@@ -68,7 +72,7 @@ const LoginPage = () => {
       
       navigate(dashboardPath);
     } catch (err) {
-      setError(err?.data?.message || 'Login failed');
+      setError(err?.data?.message || err?.message || 'Login failed');
     }
   };
 
