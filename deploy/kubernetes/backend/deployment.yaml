@@ -1,0 +1,97 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sms-backend
+  namespace: school-management
+  labels:
+    app: sms-backend
+    tier: api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: sms-backend
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 0
+  template:
+    metadata:
+      labels:
+        app: sms-backend
+        tier: api
+    spec:
+      containers:
+        - name: backend
+          # TODO: Replace with your actual Docker Hub image
+          image: your-dockerhub-username/school-mgmt-backend:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5000
+              name: http
+              protocol: TCP
+
+          # Environment variables from ConfigMap and Secret
+          envFrom:
+            - configMapRef:
+                name: sms-config
+            - secretRef:
+                name: sms-secrets
+
+          # Resource requests and limits
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+
+          # Readiness probe - check if app is ready to receive traffic
+          readinessProbe:
+            httpGet:
+              path: /api/health
+              port: 5000
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+
+          # Liveness probe - check if app is still alive
+          livenessProbe:
+            httpGet:
+              path: /api/health
+              port: 5000
+            initialDelaySeconds: 30
+            periodSeconds: 15
+            timeoutSeconds: 5
+            failureThreshold: 3
+
+          # Container security context
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1001
+            allowPrivilegeEscalation: false
+
+      # Pod-level security context
+      securityContext:
+        fsGroup: 1001
+
+      # Anti-affinity to spread pods across nodes
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                    - key: app
+                      operator: In
+                      values:
+                        - sms-backend
+                topologyKey: kubernetes.io/hostname
+
+      # Image pull secrets (if using private Docker Hub repo)
+      # imagePullSecrets:
+      #   - name: dockerhub-credentials

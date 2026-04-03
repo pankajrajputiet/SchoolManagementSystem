@@ -1,8 +1,13 @@
 const ApiError = require('../utils/ApiError');
 const logger = require('../config/logger');
+const { errorCounter } = require('../config/prometheus');
 
 const errorHandler = (err, req, res, _next) => {
   let error = { ...err, message: err.message };
+
+  // Track errors in Prometheus
+  const errorType = err.name || 'UnknownError';
+  errorCounter.labels({ type: errorType }).inc();
 
   // Log the error
   logger.error(`${err.message}`, { stack: err.stack, url: req.originalUrl });

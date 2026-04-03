@@ -1,0 +1,121 @@
+# Network Policies for School Management System
+# IMPORTANT: These require a CNI that supports Network Policies (Calico, Cilium, or AWS VPC CNI with policy enforcement enabled)
+#
+# For AWS VPC CNI, enable network policy:
+# eksctl create addon --name vpc-cni --cluster school-mgmt --attach-policy-arn arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy
+# kubectl set env daemonset aws-node -n kube-system ENABLE_NETWORK_POLICY=true
+
+---
+# Default deny all ingress traffic in school-management namespace
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: default-deny-ingress
+  namespace: school-management
+spec:
+  podSelector: {}
+  policyTypes:
+    - Ingress
+
+---
+# Allow ingress to backend from frontend pods and monitoring namespace
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: backend-ingress-policy
+  namespace: school-management
+spec:
+  podSelector:
+    matchLabels:
+      app: sms-backend
+  policyTypes:
+    - Ingress
+  ingress:
+    # Allow from frontend pods
+    - from:
+        - podSelector:
+            matchLabels:
+              app: sms-frontend
+      ports:
+        - protocol: TCP
+          port: 5000
+
+    # Allow from monitoring namespace (Prometheus scraping)
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              name: monitoring
+      ports:
+        - protocol: TCP
+          port: 5000
+
+    # Allow from ALB controller namespace (typically kube-system)
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+      ports:
+        - protocol: TCP
+          port: 5000
+
+---
+# Allow ingress to frontend from ALB controller
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: frontend-ingress-policy
+  namespace: school-management
+spec:
+  podSelector:
+    matchLabels:
+      app: sms-frontend
+  policyTypes:
+    - Ingress
+  ingress:
+    # Allow from ALB controller namespace
+    - from:
+        - namespaceSelector:
+            matchLabels:
+              kubernetes.io/metadata.name: kube-system
+      ports:
+        - protocol: TCP
+          port: 80
+
+---
+# Backend egress policy - allow only necessary outbound traffic
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: backend-egress-policy
+  namespace: school-management
+spec:
+  podSelector:
+    matchLabels:
+      app: sms-backend
+  policyTypes:
+    - Egress
+  egress:
+    # Allow DNS resolution
+    - to:
+        - namespaceSelector: {}
+          podSelector:
+            matchLabels:
+              k8s-app: kube-dns
+      ports:
+        - protocol: UDP
+          port: 53
+        - protocol: TCP
+          port: 53
+
+    # Allow HTTPS to MongoDB Atlas (external)
+    # Note: In production, restrict to specific MongoDB Atlas CIDRs
+    - to: []
+      ports:
+        - protocol: TCP
+          port: 443
+
+    # Allow HTTPS to Cloudinary API
+    - to: []
+      ports:
+        - protocol: TCP
+          port: 443
