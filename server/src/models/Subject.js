@@ -3,6 +3,12 @@ const { SUBJECT_TYPES } = require('../constants');
 
 const subjectSchema = new mongoose.Schema(
   {
+    schoolId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'School',
+      required: true,
+      index: true,
+    },
     name: {
       type: String,
       required: [true, 'Subject name is required'],
@@ -11,7 +17,6 @@ const subjectSchema = new mongoose.Schema(
     code: {
       type: String,
       required: [true, 'Subject code is required'],
-      unique: true,
       uppercase: true,
       trim: true,
     },
@@ -34,5 +39,8 @@ const subjectSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+// Compound unique index: subject code must be unique within a school
+subjectSchema.index({ schoolId: 1, code: 1 }, { unique: true });
 
 module.exports = mongoose.model('Subject', subjectSchema);

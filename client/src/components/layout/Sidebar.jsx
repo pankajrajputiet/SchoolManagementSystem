@@ -23,10 +23,20 @@ import NotificationsIcon from '@mui/icons-material/Notifications';
 import SmsIcon from '@mui/icons-material/Sms';
 import HistoryIcon from '@mui/icons-material/History';
 import BarChartIcon from '@mui/icons-material/BarChart';
+import AdminPanelSettingsIcon from '@mui/icons-material/AdminPanelSettings';
+import SettingsIcon from '@mui/icons-material/Settings';
 import useAuth from '@/hooks/useAuth';
 import { ROLES } from '@/utils/constants';
 
 const DRAWER_WIDTH = 240;
+
+const superAdminNav = [
+  { label: 'Dashboard', path: '/superadmin/dashboard', icon: <DashboardIcon /> },
+  { label: 'Schools', path: '/superadmin/schools', icon: <SchoolIcon /> },
+  { label: 'Users', path: '/superadmin/users', icon: <PeopleIcon /> },
+  { label: 'Reports', path: '/superadmin/reports', icon: <AssessmentIcon /> },
+  { label: 'Settings', path: '/superadmin/settings', icon: <SettingsIcon /> },
+];
 
 const adminNav = [
   { label: 'Dashboard', path: '/admin/dashboard', icon: <DashboardIcon /> },
@@ -63,7 +73,10 @@ const Sidebar = ({ open, onClose, variant = 'permanent' }) => {
 
   const getNavItems = () => {
     switch (role) {
+      case ROLES.SUPER_ADMIN:
+        return superAdminNav;
       case ROLES.ADMIN:
+      case ROLES.SCHOOL_ADMIN:
         return adminNav;
       case ROLES.TEACHER:
         return teacherNav;

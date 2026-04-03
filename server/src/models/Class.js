@@ -3,6 +3,12 @@ const { SECTIONS } = require('../constants');
 
 const classSchema = new mongoose.Schema(
   {
+    schoolId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'School',
+      required: true,
+      index: true,
+    },
     name: {
       type: String,
       required: [true, 'Class name is required'],
@@ -43,6 +49,7 @@ const classSchema = new mongoose.Schema(
   }
 );
 
-classSchema.index({ name: 1, section: 1, academicYear: 1 }, { unique: true });
+// Compound unique index: class name+section+academicYear must be unique within a school
+classSchema.index({ schoolId: 1, name: 1, section: 1, academicYear: 1 }, { unique: true });
 
 module.exports = mongoose.model('Class', classSchema);

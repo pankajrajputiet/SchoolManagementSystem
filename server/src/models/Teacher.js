@@ -2,16 +2,20 @@ const mongoose = require('mongoose');
 
 const teacherSchema = new mongoose.Schema(
   {
+    schoolId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'School',
+      required: true,
+      index: true,
+    },
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
       required: true,
-      unique: true,
     },
     employeeId: {
       type: String,
       required: [true, 'Employee ID is required'],
-      unique: true,
       trim: true,
     },
     subjects: [
@@ -47,5 +51,9 @@ const teacherSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+// Compound unique index: employeeId must be unique within a school
+teacherSchema.index({ schoolId: 1, employeeId: 1 }, { unique: true });
+teacherSchema.index({ schoolId: 1, user: 1 }, { unique: true });
 
 module.exports = mongoose.model('Teacher', teacherSchema);

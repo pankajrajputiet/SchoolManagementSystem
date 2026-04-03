@@ -13,7 +13,6 @@ const userSchema = new mongoose.Schema(
     email: {
       type: String,
       required: [true, 'Email is required'],
-      unique: true,
       lowercase: true,
       trim: true,
     },
@@ -27,6 +26,17 @@ const userSchema = new mongoose.Schema(
       type: String,
       enum: Object.values(ROLES),
       required: [true, 'Role is required'],
+    },
+    schoolId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'School',
+      required: function () {
+        return this.role !== ROLES.SUPER_ADMIN;
+      },
+    },
+    isSuperAdmin: {
+      type: Boolean,
+      default: false,
     },
     phone: {
       type: String,
@@ -45,6 +55,17 @@ const userSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+// Compound unique index for email + schoolId (allows same email across different schools)
+// Super admins don't need schoolId, so we use sparse index
+userSchema.index(
+  { email: 1, schoolId: 1 },
+  { unique: true, sparse: true }
+);
+
+// Index for efficient school-based queries
+userSchema.index({ schoolId: 1, role: 1 });
+userSchema.index({ email: 1 });
 
 // Hash password before saving
 userSchema.pre('save', async function () {

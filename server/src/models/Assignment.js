@@ -2,6 +2,12 @@ const mongoose = require('mongoose');
 
 const assignmentSchema = new mongoose.Schema(
   {
+    schoolId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'School',
+      required: true,
+      index: true,
+    },
     title: {
       type: String,
       required: [true, 'Title is required'],
@@ -59,7 +65,7 @@ const assignmentSchema = new mongoose.Schema(
   }
 );
 
-assignmentSchema.index({ class: 1, subject: 1 });
-assignmentSchema.index({ dueDate: 1 });
+assignmentSchema.index({ schoolId: 1, class: 1, subject: 1 });
+assignmentSchema.index({ schoolId: 1, dueDate: 1 });
 
 module.exports = mongoose.model('Assignment', assignmentSchema);

@@ -3,6 +3,12 @@ const { ATTENDANCE_STATUS } = require('../constants');
 
 const attendanceSchema = new mongoose.Schema(
   {
+    schoolId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'School',
+      required: true,
+      index: true,
+    },
     student: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Student',
@@ -37,7 +43,7 @@ const attendanceSchema = new mongoose.Schema(
   }
 );
 
-attendanceSchema.index({ student: 1, date: 1 }, { unique: true });
-attendanceSchema.index({ class: 1, date: 1 });
+attendanceSchema.index({ schoolId: 1, student: 1, date: 1 }, { unique: true });
+attendanceSchema.index({ schoolId: 1, class: 1, date: 1 });
 
 module.exports = mongoose.model('Attendance', attendanceSchema);

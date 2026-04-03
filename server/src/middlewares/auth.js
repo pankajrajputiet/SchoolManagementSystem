@@ -29,6 +29,9 @@ const auth = asyncHandler(async (req, _res, next) => {
   }
 
   req.user = user;
+  req.schoolId = decoded.schoolId || null;
+  req.userRole = decoded.role;
+  req.isSuperAdmin = decoded.isSuperAdmin || false;
   next();
 });
 

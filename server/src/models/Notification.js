@@ -3,6 +3,11 @@ const { NOTIFICATION_TYPES, ROLES } = require('../constants');
 
 const notificationSchema = new mongoose.Schema(
   {
+    schoolId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'School',
+      index: true,
+    },
     title: {
       type: String,
       required: [true, 'Title is required'],

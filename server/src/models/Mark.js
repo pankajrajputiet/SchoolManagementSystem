@@ -3,6 +3,12 @@ const { EXAM_TYPES } = require('../constants');
 
 const markSchema = new mongoose.Schema(
   {
+    schoolId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'School',
+      required: true,
+      index: true,
+    },
     student: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'Student',
@@ -56,7 +62,7 @@ const markSchema = new mongoose.Schema(
 );
 
 markSchema.index(
-  { student: 1, subject: 1, examType: 1, academicYear: 1 },
+  { schoolId: 1, student: 1, subject: 1, examType: 1, academicYear: 1 },
   { unique: true }
 );
 

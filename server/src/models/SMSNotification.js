@@ -2,6 +2,12 @@ const mongoose = require('mongoose');
 
 const smsNotificationSchema = new mongoose.Schema(
   {
+    schoolId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'School',
+      required: true,
+      index: true,
+    },
     // Message content
     message: {
       type: String,

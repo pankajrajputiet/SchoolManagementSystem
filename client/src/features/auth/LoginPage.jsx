@@ -43,7 +43,28 @@ const LoginPage = () => {
       const res = await login(data).unwrap();
       dispatch(setCredentials({ user: res.data.user, token: res.data.token }));
       const role = res.data.user.role;
-      navigate(`/${role}/dashboard`);
+      
+      // Map roles to their dashboard routes
+      let dashboardPath;
+      switch (role) {
+        case 'superadmin':
+          dashboardPath = '/superadmin/dashboard';
+          break;
+        case 'schooladmin':
+        case 'admin':
+          dashboardPath = '/admin/dashboard';
+          break;
+        case 'teacher':
+          dashboardPath = '/teacher/dashboard';
+          break;
+        case 'student':
+          dashboardPath = '/student/dashboard';
+          break;
+        default:
+          dashboardPath = '/login';
+      }
+      
+      navigate(dashboardPath);
     } catch (err) {
       setError(err?.data?.message || 'Login failed');
     }
@@ -100,7 +121,9 @@ const LoginPage = () => {
           </form>
 
           <Typography variant="caption" className="block text-center mt-4" color="text.secondary">
-            Default admin: admin@school.com / Admin@123456
+            Super Admin: superadmin@schoolmanagement.com / SuperAdmin@123
+            <br />
+            School Admin: admin@demosschool.com / SchoolAdmin@123
           </Typography>
         </CardContent>
       </Card>

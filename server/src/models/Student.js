@@ -3,16 +3,20 @@ const { SECTIONS, GENDERS } = require('../constants');
 
 const studentSchema = new mongoose.Schema(
   {
+    schoolId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'School',
+      required: true,
+      index: true,
+    },
     user: {
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User',
       required: true,
-      unique: true,
     },
     rollNumber: {
       type: String,
       required: [true, 'Roll number is required'],
-      unique: true,
       trim: true,
     },
     class: {
@@ -61,5 +65,9 @@ const studentSchema = new mongoose.Schema(
     timestamps: true,
   }
 );
+
+// Compound unique index: rollNumber must be unique within a school
+studentSchema.index({ schoolId: 1, rollNumber: 1 }, { unique: true });
+studentSchema.index({ schoolId: 1, class: 1 });
 
 module.exports = mongoose.model('Student', studentSchema);

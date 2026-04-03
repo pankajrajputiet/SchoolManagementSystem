@@ -2,20 +2,32 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const ApiError = require('../utils/ApiError');
 
-const generateToken = (userId) => {
-  return jwt.sign({ id: userId }, process.env.JWT_SECRET, {
-    expiresIn: process.env.JWT_EXPIRES_IN || '7d',
-  });
+const generateToken = (user) => {
+  return jwt.sign(
+    {
+      id: user._id,
+      schoolId: user.schoolId || null,
+      role: user.role,
+      isSuperAdmin: user.isSuperAdmin || false,
+    },
+    process.env.JWT_SECRET,
+    {
+      expiresIn: process.env.JWT_EXPIRES_IN || '7d',
+    }
+  );
 };
 
 const registerUser = async (userData) => {
-  const existingUser = await User.findOne({ email: userData.email });
+  const existingUser = await User.findOne({
+    email: userData.email,
+    schoolId: userData.schoolId || null,
+  });
   if (existingUser) {
     throw new ApiError(409, 'Email already registered');
   }
 
   const user = await User.create(userData);
-  const token = generateToken(user._id);
+  const token = generateToken(user);
 
   const userObj = user.toObject();
   delete userObj.password;
@@ -39,7 +51,7 @@ const loginUser = async ({ email, password }) => {
     throw new ApiError(401, 'Invalid email or password');
   }
 
-  const token = generateToken(user._id);
+  const token = generateToken(user);
 
   const userObj = user.toObject();
   delete userObj.password;

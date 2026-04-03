@@ -1,6 +1,8 @@
 export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api/v1';
 
 export const ROLES = {
+  SUPER_ADMIN: 'superadmin',
+  SCHOOL_ADMIN: 'schooladmin',
   ADMIN: 'admin',
   TEACHER: 'teacher',
   STUDENT: 'student',

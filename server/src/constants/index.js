@@ -1,5 +1,7 @@
 const ROLES = {
-  ADMIN: 'admin',
+  SUPER_ADMIN: 'superadmin',
+  SCHOOL_ADMIN: 'schooladmin',
+  ADMIN: 'admin', // Legacy, maps to SCHOOL_ADMIN
   TEACHER: 'teacher',
   STUDENT: 'student',
 };

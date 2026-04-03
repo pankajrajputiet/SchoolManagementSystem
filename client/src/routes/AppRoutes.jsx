@@ -21,6 +21,11 @@ import StudentAssignments from '@/features/student/ViewAssignments';
 import SendSMS from '@/features/notifications/SendSMS';
 import SMSHistory from '@/features/notifications/SMSHistory';
 import SMSStats from '@/features/notifications/SMSStats';
+import SuperAdminDashboard from '@/features/admin/SuperAdminDashboard';
+import ManageSchools from '@/features/superadmin/ManageSchools';
+import ManageUsers from '@/features/superadmin/ManageUsers';
+import SuperAdminReports from '@/features/superadmin/SuperAdminReports';
+import SuperAdminSettings from '@/features/superadmin/SuperAdminSettings';
 import { ROLES } from '@/utils/constants';
 import { Typography, Box, Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
@@ -62,8 +67,17 @@ const AppRoutes = () => {
       {/* Protected routes */}
       <Route element={<ProtectedRoute />}>
         <Route element={<MainLayout />}>
+          {/* Super Admin routes */}
+          <Route element={<RoleBasedRoute allowedRoles={[ROLES.SUPER_ADMIN]} />}>
+            <Route path="/superadmin/dashboard" element={<SuperAdminDashboard />} />
+            <Route path="/superadmin/schools" element={<ManageSchools />} />
+            <Route path="/superadmin/users" element={<ManageUsers />} />
+            <Route path="/superadmin/reports" element={<SuperAdminReports />} />
+            <Route path="/superadmin/settings" element={<SuperAdminSettings />} />
+          </Route>
+
           {/* Admin routes */}
-          <Route element={<RoleBasedRoute allowedRoles={[ROLES.ADMIN]} />}>
+          <Route element={<RoleBasedRoute allowedRoles={[ROLES.ADMIN, ROLES.SCHOOL_ADMIN]} />}>
             <Route path="/admin/dashboard" element={<AdminDashboard />} />
             <Route path="/admin/students" element={<ManageStudents />} />
             <Route path="/admin/teachers" element={<ManageTeachers />} />
