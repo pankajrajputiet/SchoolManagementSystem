@@ -21,25 +21,14 @@ exports.getActiveSchools = asyncHandler(async (req, res) => {
 // @route   POST /api/v1/schools
 // @access  Super Admin
 exports.createSchool = asyncHandler(async (req, res) => {
-  console.log('=== CREATE SCHOOL ===');
-  console.log('Request body:', JSON.stringify(req.body, null, 2));
-  
   const { adminName, adminEmail, adminPassword, ...schoolData } = req.body;
-  
-  console.log('Admin Name:', adminName);
-  console.log('Admin Email:', adminEmail);
-  console.log('Admin Password:', adminPassword);
-  console.log('School Data:', JSON.stringify(schoolData, null, 2));
 
   // Create the school
   const school = await School.create(schoolData);
-  
-  console.log('School created:', school._id);
 
   // Create school admin user if admin credentials provided
   let schoolAdmin = null;
   if (adminName && adminEmail && adminPassword) {
-    console.log('Creating school admin user...');
     schoolAdmin = await User.create({
       name: adminName,
       email: adminEmail,
@@ -49,9 +38,6 @@ exports.createSchool = asyncHandler(async (req, res) => {
       phone: schoolData.phone || '',
       isActive: true,
     });
-    console.log('School admin created:', schoolAdmin._id);
-  } else {
-    console.log('No admin credentials provided');
   }
 
   res.status(201).json(
