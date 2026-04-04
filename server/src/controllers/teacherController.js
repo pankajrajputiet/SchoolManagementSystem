@@ -3,7 +3,7 @@ const ApiResponse = require('../utils/ApiResponse');
 const teacherService = require('../services/teacherService');
 
 const create = asyncHandler(async (req, res) => {
-  const teacher = await teacherService.createTeacher(req.body);
+  const teacher = await teacherService.createTeacher(req.body, req.user);
   const response = new ApiResponse(201, 'Teacher created successfully', teacher);
   res.status(response.statusCode).json(response);
 });

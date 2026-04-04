@@ -5,11 +5,18 @@ const { ROLES } = require('../constants');
 const ApiError = require('../utils/ApiError');
 const { paginate } = require('../utils/pagination');
 
-const createStudent = async (data) => {
+const createStudent = async (data, userContext) => {
   // Check if email already exists
   const existingUser = await User.findOne({ email: data.email });
   if (existingUser) {
     throw new ApiError(409, 'Email already registered');
+  }
+
+  // Get schoolId from user context (logged-in school admin)
+  const schoolId = userContext?.schoolId || data.schoolId;
+  
+  if (!schoolId) {
+    throw new ApiError(400, 'School ID is required. Please ensure you are logged in as a school admin.');
   }
 
   // Create user account
@@ -19,6 +26,7 @@ const createStudent = async (data) => {
     password: data.password,
     role: ROLES.STUDENT,
     phone: data.phone,
+    schoolId: schoolId,
   });
 
   // Create student profile

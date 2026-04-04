@@ -5,14 +5,15 @@
 2. [Technology Stack](#technology-stack)
 3. [System Architecture](#system-architecture)
 4. [Core Features](#core-features)
-5. [SMS Notification System](#sms-notification-system)
-6. [API Documentation](#api-documentation)
-7. [Database Schema](#database-schema)
-8. [Deployment Guide](#deployment-guide)
-9. [Development Setup](#development-setup)
-10. [Testing](#testing)
-11. [Security](#security)
-12. [Monitoring & Analytics](#monitoring--analytics)
+5. [Multi-Tenant Architecture](#multi-tenant-architecture)
+6. [SMS Notification System](#sms-notification-system)
+7. [API Documentation](#api-documentation)
+8. [Database Schema](#database-schema)
+9. [Deployment Guide](#deployment-guide)
+10. [Development Setup](#development-setup)
+11. [Testing](#testing)
+12. [Security](#security)
+13. [Monitoring & Analytics](#monitoring--analytics)
 
 ---
 
@@ -282,6 +283,138 @@ F:  <40%
 - Read/unread status
 - Targeted by role or user
 - Expiration dates
+
+---
+
+## Multi-Tenant Architecture
+
+### Overview
+
+The School Management System supports multiple schools through a multi-tenant architecture. Each school operates independently with its own users, students, teachers, and data, while being managed from a centralized Super Admin portal.
+
+### User Roles (Updated)
+
+| Role | Description | Access Level |
+|------|-------------|--------------|
+| **Super Admin** | System administrator | All schools, manage schools and users |
+| **School Admin** | School-level administrator | Own school only |
+| **Teacher** | Teaching staff | Own classes and students |
+| **Student** | Enrolled student | Own data only |
+
+### Super Admin Portal
+
+The Super Admin has system-wide access and can:
+
+- **Manage Schools**: Create, view, update, and deactivate schools
+- **Manage Users**: Create and manage users across all schools
+- **View Reports**: System-wide analytics and reports
+- **Monitor System**: Overall system health and usage
+
+#### Creating a School with Admin User
+
+When a Super Admin creates a new school, the system automatically:
+
+1. Creates the school record with all provided details
+2. Creates a School Admin user associated with that school
+3. The School Admin can then login and manage their school independently
+
+**Required Fields for School Creation:**
+
+School Information:
+- School Name (required)
+- School Code (optional, auto-generated if not provided)
+- Phone, Email
+- Principal Name
+- Affiliated Board (CBSE, ICSE, State Board, IB, IGCSE, Other)
+- School Type (Public, Private, Government, International)
+- Max Students capacity
+
+School Admin Credentials (required for new schools):
+- Admin Name
+- Admin Email
+- Admin Password (minimum 6 characters)
+
+**API Endpoint:**
+```bash
+POST /api/v1/schools
+Authorization: Bearer <super_admin_token>
+Content-Type: application/json
+
+{
+  "name": "Springfield Academy",
+  "code": "SA001",
+  "phone": "+1234567890",
+  "email": "info@springfield.edu",
+  "principalName": "Dr. John Smith",
+  "affiliatedBoard": "CBSE",
+  "schoolType": "private",
+  "maxStudents": 5000,
+  "adminName": "John Admin",
+  "adminEmail": "admin@springfield.edu",
+  "adminPassword": "Admin@123"
+}
+
+Response:
+{
+  "success": true,
+  "message": "School created successfully",
+  "data": {
+    "school": { ... },
+    "adminCreated": true,
+    "admin": {
+      "id": "user_id",
+      "name": "John Admin",
+      "email": "admin@springfield.edu"
+    }
+  }
+}
+```
+
+### School-Specific Features
+
+#### Login Page Branding
+
+The login page displays:
+- **Company Name**: "School Management - Enterprise Portal"
+- **Professional Logo**: Business icon with gradient background
+- **Clean Interface**: Simple email and password login form
+- **Demo Credentials**: Shown at the bottom for testing
+
+After login, the sidebar displays school-specific branding:
+
+**For Super Admin:**
+```
+┌─────────────────────────┐
+│    🏢 SchoolIcon        │
+│  School Management      │
+│  Super Admin Portal     │
+└─────────────────────────┘
+```
+
+**For School Users (Admin, Teacher, Student):**
+```
+┌─────────────────────────┐
+│    📷 [School Logo]     │
+│  Springfield Academy    │
+│       SA001             │
+└─────────────────────────┘
+```
+
+The school header is fetched dynamically using the user's `schoolId` and displays:
+- School logo (if available) or fallback to SchoolIcon
+- School name
+- School code
+
+### School Data Isolation
+
+Each school's data is completely isolated:
+- Students belong to one school only
+- Teachers are associated with one school
+- Classes and subjects are school-specific
+- Attendance, marks, and assignments are school-scoped
+- School Admin can only access their own school's data
+
+Super Admin can access all schools but typically manages at a higher level.
 
 ---
 

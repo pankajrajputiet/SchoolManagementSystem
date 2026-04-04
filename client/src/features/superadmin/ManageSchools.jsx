@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Box, Typography, Button, Dialog, DialogTitle, DialogContent,
   DialogActions, TextField, MenuItem, Alert, Chip, Divider,
@@ -51,6 +51,7 @@ const ManageSchools = () => {
   const [deleteId, setDeleteId] = useState(null);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
+  const [submitLoading, setSubmitLoading] = useState(false);
 
   const { control, handleSubmit, reset } = useForm({
     resolver: yupResolver(schema, { context: { isNew: !editSchool } }),
@@ -69,7 +70,7 @@ const ManageSchools = () => {
     }
   };
 
-  useState(() => {
+  useEffect(() => {
     fetchSchools();
   }, []);
 
@@ -113,19 +114,43 @@ const ManageSchools = () => {
     try {
       setError('');
       setSuccess('');
+      setSubmitLoading(true);
       
       if (editSchool) {
         await axiosInstance.put(`/schools/${editSchool._id}`, formData);
         setSuccess('School updated successfully');
       } else {
-        await axiosInstance.post('/schools', formData);
+        const response = await axiosInstance.post('/schools', formData);
         setSuccess('School created successfully');
+        
+        // Log the response for debugging
+        console.log('School created:', response.data);
       }
       
+      // Close form and reset
       setFormOpen(false);
-      fetchSchools();
+      setEditSchool(null);
+      reset({
+        name: '',
+        code: '',
+        phone: '',
+        email: '',
+        principalName: '',
+        affiliatedBoard: '',
+        schoolType: 'private',
+        maxStudents: 5000,
+        adminName: '',
+        adminEmail: '',
+        adminPassword: '',
+      });
+      
+      // Refresh schools list
+      await fetchSchools();
     } catch (err) {
       setError(err?.response?.data?.message || 'Operation failed');
+      console.error('School creation error:', err);
+    } finally {
+      setSubmitLoading(false);
     }
   };
 
@@ -283,9 +308,9 @@ const ManageSchools = () => {
           </DialogContent>
           
           <DialogActions>
-            <Button onClick={() => setFormOpen(false)}>Cancel</Button>
-            <Button type="submit" variant="contained">
-              {editSchool ? 'Update' : 'Create'}
+            <Button onClick={() => setFormOpen(false)} disabled={submitLoading}>Cancel</Button>
+            <Button type="submit" variant="contained" disabled={submitLoading}>
+              {submitLoading ? 'Processing...' : (editSchool ? 'Update' : 'Create')}
             </Button>
           </DialogActions>
         </form>
