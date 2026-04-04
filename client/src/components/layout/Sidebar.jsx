@@ -30,7 +30,7 @@ import PaymentsIcon from '@mui/icons-material/Payments';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import useAuth from '@/hooks/useAuth';
 import { ROLES } from '@/utils/constants';
-import apiSlice from '@/api/apiSlice';
+import axiosInstance from '@/api/axiosInstance';
 
 const DRAWER_WIDTH = 260;
 
@@ -89,7 +89,7 @@ const Sidebar = ({ open, onClose, variant = 'permanent' }) => {
 
       if (user?.schoolId) {
         try {
-          const response = await apiSlice.get(`/schools/${user.schoolId}`);
+          const response = await axiosInstance.get(`/schools/${user.schoolId}`);
           const schoolData = response.data.data || response.data.message;
           setSchoolInfo(schoolData);
         } catch (err) {
