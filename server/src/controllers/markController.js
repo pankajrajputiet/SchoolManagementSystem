@@ -3,7 +3,7 @@ const ApiResponse = require('../utils/ApiResponse');
 const markService = require('../services/markService');
 
 const create = asyncHandler(async (req, res) => {
-  const result = await markService.createMarks(req.body, req.user._id);
+  const result = await markService.createMarks(req.body, req.user);
   const response = new ApiResponse(201, result.data, result.message);
   res.status(response.statusCode).json(response);
 });

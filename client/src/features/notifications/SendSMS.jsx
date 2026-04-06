@@ -43,10 +43,10 @@ const SendSMS = () => {
     skip: !targetClass,
   });
   const [sendSMS, { isLoading: sending }] = useSendSMSMutation();
-console.log('Templates Data:', templatesData);
   const templates = templatesData?.data || {};
   const classes = classesData?.data?.data || [];
   const students = studentsData?.data?.students || [];
+console.log('classes Data:', classes);
 
   // Reset selected students when class changes
   useEffect(() => {
@@ -218,7 +218,7 @@ console.log('Templates Data:', templatesData);
               >
                 {classes.map((cls) => (
                   <MenuItem key={cls._id} value={cls._id}>
-                    {cls.name} - {cls.section} ({cls.studentsCount || 0} students)
+                    {cls.name} - {cls.section} ({cls.students.length || 0} students)
                   </MenuItem>
                 ))}
               </TextField>

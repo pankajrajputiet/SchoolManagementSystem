@@ -2,7 +2,7 @@ const Assignment = require('../models/Assignment');
 const ApiError = require('../utils/ApiError');
 const { paginate } = require('../utils/pagination');
 
-const createAssignment = async (data, userId, files) => {
+const createAssignment = async (data, userId,schoolId, files) => {
   const attachments = (files || []).map((file) => ({
     fileName: file.originalname,
     fileUrl: file.path,
@@ -13,6 +13,7 @@ const createAssignment = async (data, userId, files) => {
     ...data,
     assignedBy: userId,
     attachments,
+    schoolId,
   });
   return assignment;
 };

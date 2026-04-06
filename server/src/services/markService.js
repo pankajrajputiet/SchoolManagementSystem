@@ -2,9 +2,10 @@ const Mark = require('../models/Mark');
 const ApiError = require('../utils/ApiError');
 const { paginate } = require('../utils/pagination');
 
-const createMarks = async (data, userId) => {
+const createMarks = async (data, userContext) => {
   const { classId, subject, examType, academicYear, totalMarks, records } = data;
-
+  userId = userContext._id;
+  schoolId = userContext.schoolId;
   const markDocs = records.map((record) => ({
     student: record.student,
     subject,
@@ -15,6 +16,7 @@ const createMarks = async (data, userId) => {
     remarks: record.remarks,
     academicYear,
     enteredBy: userId,
+    schoolId,
   }));
 
   // Use individual saves to trigger the pre-save hook for grade calculation
