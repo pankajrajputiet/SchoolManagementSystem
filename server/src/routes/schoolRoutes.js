@@ -42,6 +42,13 @@ router.route('/:id')
   )
   .delete(superAdminOnly, schoolController.deleteSchool);
 
+// Recover deleted school (Super Admin only)
+router.patch(
+  '/:id/recover',
+  superAdminOnly,
+  schoolController.recoverSchool
+);
+
 // Stats for specific school
 router.get('/:id/stats', schoolAccess, schoolController.getSchoolStats);
 

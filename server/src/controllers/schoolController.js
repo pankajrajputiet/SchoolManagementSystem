@@ -157,7 +157,32 @@ exports.deleteSchool = asyncHandler(async (req, res) => {
   );
 
   res.status(200).json(
-    new ApiResponse(200, null, 'School deactivated successfully')
+    new ApiResponse(200, school, 'School deactivated successfully')
+  );
+});
+
+// @desc    Recover a deleted school (reactivate)
+// @route   PATCH /api/v1/schools/:id/recover
+// @access  Super Admin only
+exports.recoverSchool = asyncHandler(async (req, res) => {
+  const school = await School.findByIdAndUpdate(
+    req.params.id,
+    { isActive: true },
+    { new: true }
+  );
+
+  if (!school) {
+    throw new ApiError(404, 'School not found');
+  }
+
+  // Reactivate all users in the school
+  await User.updateMany(
+    { schoolId: school._id },
+    { isActive: true }
+  );
+
+  res.status(200).json(
+    new ApiResponse(200, school, 'School recovered successfully')
   );
 });
 

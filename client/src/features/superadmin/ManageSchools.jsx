@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react';
 import {
   Box, Typography, Button, Dialog, DialogTitle, DialogContent,
-  DialogActions, TextField, MenuItem, Alert, Chip, Divider,
+  DialogActions, TextField, MenuItem, Alert, Chip, Divider, IconButton, Tooltip, Tabs, Tab,
 } from '@mui/material';
 import { DataGrid } from '@mui/x-data-grid';
 import AddIcon from '@mui/icons-material/Add';
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
+import RestoreIcon from '@mui/icons-material/Restore';
 import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as yup from 'yup';
@@ -49,9 +50,11 @@ const ManageSchools = () => {
   const [formOpen, setFormOpen] = useState(false);
   const [editSchool, setEditSchool] = useState(null);
   const [deleteId, setDeleteId] = useState(null);
+  const [recoverId, setRecoverId] = useState(null);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
   const [submitLoading, setSubmitLoading] = useState(false);
+  const [tabValue, setTabValue] = useState(0); // 0 for active, 1 for inactive
 
   const { control, handleSubmit, reset } = useForm({
     resolver: yupResolver(schema, { context: { isNew: !editSchool } }),
@@ -165,6 +168,17 @@ const ManageSchools = () => {
     }
   };
 
+  const handleRecover = async () => {
+    try {
+      await axiosInstance.patch(`/schools/${recoverId}/recover`);
+      setSuccess('School recovered successfully');
+      setRecoverId(null);
+      fetchSchools();
+    } catch (err) {
+      setError('Failed to recover school');
+    }
+  };
+
   const columns = [
     { field: 'code', headerName: 'Code', width: 100 },
     { field: 'name', headerName: 'School Name', flex: 1 },
@@ -192,22 +206,38 @@ const ManageSchools = () => {
     {
       field: 'actions',
       headerName: 'Actions',
-      width: 150,
+      width: tabValue === 1 ? 100 : 150,
       sortable: false,
       renderCell: (params) => (
         <Box className="flex gap-1">
-          <Button size="small" onClick={() => openEdit(params.row)}>
-            <EditIcon fontSize="small" />
-          </Button>
-          <Button size="small" color="error" onClick={() => setDeleteId(params.row._id)}>
-            <DeleteIcon fontSize="small" />
-          </Button>
+          {params.row.isActive ? (
+            <>
+              <Button size="small" onClick={() => openEdit(params.row)}>
+                <EditIcon fontSize="small" />
+              </Button>
+              <Button size="small" color="error" onClick={() => setDeleteId(params.row._id)}>
+                <DeleteIcon fontSize="small" />
+              </Button>
+            </>
+          ) : (
+            <Tooltip title="Recover School">
+              <IconButton 
+                size="small" 
+                color="success" 
+                onClick={() => setRecoverId(params.row._id)}
+              >
+                <RestoreIcon fontSize="small" />
+              </IconButton>
+            </Tooltip>
+          )}
         </Box>
       ),
     },
   ];
 
-  const rows = schools.map((s) => ({ ...s, id: s._id }));
+  const filteredRows = schools
+    .filter(s => tabValue === 0 ? s.isActive : !s.isActive)
+    .map((s) => ({ ...s, id: s._id }));
 
   return (
     <Box>
@@ -221,12 +251,20 @@ const ManageSchools = () => {
       {success && <Alert severity="success" className="mb-4">{success}</Alert>}
       {error && <Alert severity="error" className="mb-4">{error}</Alert>}
 
+      {/* Tabs for Active/Inactive schools */}
+      <Box sx={{ borderBottom: 1, borderColor: 'divider', mb: 2 }}>
+        <Tabs value={tabValue} onChange={(e, val) => setTabValue(val)}>
+          <Tab label="Active Schools" />
+          <Tab label="Inactive Schools" />
+        </Tabs>
+      </Box>
+
       <Box sx={{ height: 500, width: '100%', bgcolor: 'background.paper', borderRadius: 2 }}>
         {loading ? (
           <LoadingSpinner />
         ) : (
           <DataGrid
-            rows={rows}
+            rows={filteredRows}
             columns={columns}
             disableRowSelectionOnClick
           />
@@ -322,6 +360,14 @@ const ManageSchools = () => {
         message="This will deactivate the school and all its users. Continue?"
         onConfirm={handleDelete}
         onCancel={() => setDeleteId(null)}
+      />
+
+      <ConfirmDialog
+        open={!!recoverId}
+        title="Recover School"
+        message="This will reactivate the school and all its users. Continue?"
+        onConfirm={handleRecover}
+        onCancel={() => setRecoverId(null)}
       />
     </Box>
   );
