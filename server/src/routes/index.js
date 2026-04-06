@@ -14,6 +14,7 @@ const smsRoutes = require('./smsRoutes');
 const feeRoutes = require('./feeRoutes');
 const salaryRoutes = require('./salaryRoutes');
 const userRoutes = require('./userRoutes');
+const systemStatsRoutes = require('./systemStatsRoutes');
 
 router.use('/auth', authRoutes);
 router.use('/schools', schoolRoutes);
@@ -29,5 +30,6 @@ router.use('/sms', smsRoutes);
 router.use('/fees', feeRoutes);
 router.use('/salary', salaryRoutes);
 router.use('/users', userRoutes);
+router.use('/stats', systemStatsRoutes);
 
 module.exports = router;
