@@ -27,8 +27,14 @@ const markAttendance = async (data, userId) => {
   return { message: `Attendance marked for ${records.length} students` };
 };
 
-const getAttendance = async (query) => {
+const getAttendance = async (query, schoolId = null) => {
   const filter = {};
+  
+  // Add schoolId filter if provided
+  if (schoolId) {
+    filter.schoolId = schoolId;
+  }
+  
   if (query.class) filter.class = query.class;
   if (query.student) filter.student = query.student;
   if (query.startDate || query.endDate) {
@@ -64,8 +70,14 @@ const updateAttendance = async (id, data) => {
   return record;
 };
 
-const getAttendanceReport = async (query) => {
+const getAttendanceReport = async (query, schoolId = null) => {
   const matchStage = {};
+  
+  // Add schoolId filter if provided
+  if (schoolId) {
+    matchStage.schoolId = require('mongoose').Types.ObjectId.createFromHexString(schoolId);
+  }
+  
   if (query.class) matchStage.class = require('mongoose').Types.ObjectId.createFromHexString(query.class);
   if (query.startDate || query.endDate) {
     matchStage.date = {};

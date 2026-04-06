@@ -7,8 +7,14 @@ const createClass = async (data) => {
   return cls;
 };
 
-const getClasses = async (query) => {
+const getClasses = async (query, schoolId = null) => {
   const filter = {};
+  
+  // Add schoolId filter if provided
+  if (schoolId) {
+    filter.schoolId = schoolId;
+  }
+  
   if (query.academicYear) filter.academicYear = query.academicYear;
 
   return paginate(Class, query, filter, [

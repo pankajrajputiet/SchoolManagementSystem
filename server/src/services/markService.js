@@ -30,8 +30,14 @@ const createMarks = async (data, userContext) => {
   return { message: `Marks entered for ${records.length} students`, data: results };
 };
 
-const getMarks = async (query) => {
+const getMarks = async (query, schoolId = null) => {
   const filter = {};
+  
+  // Add schoolId filter if provided
+  if (schoolId) {
+    filter.schoolId = schoolId;
+  }
+  
   if (query.class) filter.class = query.class;
   if (query.subject) filter.subject = query.subject;
   if (query.student) filter.student = query.student;
@@ -75,8 +81,14 @@ const deleteMark = async (id) => {
   return mark;
 };
 
-const getMarksReport = async (query) => {
+const getMarksReport = async (query, schoolId = null) => {
   const matchStage = {};
+  
+  // Add schoolId filter if provided
+  if (schoolId) {
+    matchStage.schoolId = require('mongoose').Types.ObjectId.createFromHexString(schoolId);
+  }
+  
   if (query.class) matchStage.class = require('mongoose').Types.ObjectId.createFromHexString(query.class);
   if (query.subject) matchStage.subject = require('mongoose').Types.ObjectId.createFromHexString(query.subject);
   if (query.examType) matchStage.examType = query.examType;

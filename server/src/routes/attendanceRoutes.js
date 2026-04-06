@@ -3,10 +3,12 @@ const attendanceController = require('../controllers/attendanceController');
 const { auth } = require('../middlewares/auth');
 const { role } = require('../middlewares/role');
 const { validate } = require('../middlewares/validate');
+const { schoolAccess } = require('../middlewares/school');
 const attendanceValidation = require('../validations/attendanceValidation');
 const { ROLES } = require('../constants');
 
 router.use(auth);
+router.use(schoolAccess);
 
 router.post(
   '/',

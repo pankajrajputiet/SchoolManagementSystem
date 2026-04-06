@@ -18,8 +18,14 @@ const createAssignment = async (data, userId,schoolId, files) => {
   return assignment;
 };
 
-const getAssignments = async (query) => {
+const getAssignments = async (query, schoolId = null) => {
   const filter = {};
+  
+  // Add schoolId filter if provided
+  if (schoolId) {
+    filter.schoolId = schoolId;
+  }
+  
   if (query.class) filter.class = query.class;
   if (query.subject) filter.subject = query.subject;
 

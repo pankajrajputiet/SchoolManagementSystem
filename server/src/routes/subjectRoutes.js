@@ -3,10 +3,12 @@ const subjectController = require('../controllers/subjectController');
 const { auth } = require('../middlewares/auth');
 const { role } = require('../middlewares/role');
 const { validate } = require('../middlewares/validate');
+const { schoolAccess } = require('../middlewares/school');
 const subjectValidation = require('../validations/subjectValidation');
 const { ROLES } = require('../constants');
 
 router.use(auth);
+router.use(schoolAccess);
 
 router
   .route('/')

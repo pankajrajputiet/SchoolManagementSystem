@@ -9,7 +9,7 @@ const create = asyncHandler(async (req, res) => {
 });
 
 const getAll = asyncHandler(async (req, res) => {
-  const result = await studentService.getStudents(req.query);
+  const result = await studentService.getStudents(req.query, req.querySchoolId);
   const response = new ApiResponse(200, result, 'Students fetched');
   res.status(response.statusCode).json(response);
 });

@@ -3,10 +3,12 @@ const studentController = require('../controllers/studentController');
 const { auth } = require('../middlewares/auth');
 const { role } = require('../middlewares/role');
 const { validate } = require('../middlewares/validate');
+const { schoolAccess } = require('../middlewares/school');
 const studentValidation = require('../validations/studentValidation');
 const { ROLES } = require('../constants');
 
 router.use(auth);
+router.use(schoolAccess);
 
 router.get('/me', role(ROLES.STUDENT), studentController.getMyProfile);
 

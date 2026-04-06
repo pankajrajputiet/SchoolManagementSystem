@@ -3,10 +3,12 @@ const markController = require('../controllers/markController');
 const { auth } = require('../middlewares/auth');
 const { role } = require('../middlewares/role');
 const { validate } = require('../middlewares/validate');
+const { schoolAccess } = require('../middlewares/school');
 const markValidation = require('../validations/markValidation');
 const { ROLES } = require('../constants');
 
 router.use(auth);
+router.use(schoolAccess);
 
 router.post(
   '/',

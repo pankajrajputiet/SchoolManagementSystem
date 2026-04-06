@@ -37,8 +37,13 @@ const createTeacher = async (data, userContext) => {
   return teacher.populate({ path: 'user', select: '-password' });
 };
 
-const getTeachers = async (query) => {
+const getTeachers = async (query, schoolId = null) => {
   const filter = {};
+  
+  // Add schoolId filter if provided
+  if (schoolId) {
+    filter.schoolId = schoolId;
+  }
 
   const searchFilter = {};
   if (query.search) {

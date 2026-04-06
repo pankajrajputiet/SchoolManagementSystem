@@ -3,13 +3,19 @@ const ApiResponse = require('../utils/ApiResponse');
 const classService = require('../services/classService');
 
 const create = asyncHandler(async (req, res) => {
-  const cls = await classService.createClass(req.body);
+  // Add schoolId from the logged-in user
+  const classData = { ...req.body };
+  if (req.user.schoolId && !classData.schoolId) {
+    classData.schoolId = req.user.schoolId;
+  }
+  
+  const cls = await classService.createClass(classData);
   const response = new ApiResponse(201, cls, 'Class created successfully');
   res.status(response.statusCode).json(response);
 });
 
 const getAll = asyncHandler(async (req, res) => {
-  const result = await classService.getClasses(req.query);
+  const result = await classService.getClasses(req.query, req.querySchoolId);
   const response = new ApiResponse(200, result,'Classes fetched');
   res.status(response.statusCode).json(response);
 });

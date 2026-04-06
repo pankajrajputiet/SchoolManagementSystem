@@ -9,7 +9,7 @@ const create = asyncHandler(async (req, res) => {
 });
 
 const getAll = asyncHandler(async (req, res) => {
-  const result = await markService.getMarks(req.query);
+  const result = await markService.getMarks(req.query, req.querySchoolId);
   const response = new ApiResponse(200, result, 'Marks fetched');
   res.status(response.statusCode).json(response);
 });
@@ -33,7 +33,7 @@ const remove = asyncHandler(async (req, res) => {
 });
 
 const getReport = asyncHandler(async (req, res) => {
-  const report = await markService.getMarksReport(req.query);
+  const report = await markService.getMarksReport(req.query, req.querySchoolId);
   const response = new ApiResponse(200, report, 'Marks report');
   res.status(response.statusCode).json(response);
 });

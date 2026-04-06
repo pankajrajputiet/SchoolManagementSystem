@@ -16,7 +16,7 @@ const create = asyncHandler(async (req, res) => {
 });
 
 const getAll = asyncHandler(async (req, res) => {
-  const result = await assignmentService.getAssignments(req.query);
+  const result = await assignmentService.getAssignments(req.query, req.querySchoolId);
   const response = new ApiResponse(200, result, 'Assignments fetched');
   res.status(response.statusCode).json(response);
 });

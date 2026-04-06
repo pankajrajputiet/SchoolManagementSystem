@@ -9,7 +9,7 @@ const markAttendance = asyncHandler(async (req, res) => {
 });
 
 const getAll = asyncHandler(async (req, res) => {
-  const result = await attendanceService.getAttendance(req.query);
+  const result = await attendanceService.getAttendance(req.query, req.querySchoolId);
   const response = new ApiResponse(200, result, 'Attendance fetched');
   res.status(response.statusCode).json(response);
 });
@@ -27,7 +27,7 @@ const update = asyncHandler(async (req, res) => {
 });
 
 const getReport = asyncHandler(async (req, res) => {
-  const report = await attendanceService.getAttendanceReport(req.query);
+  const report = await attendanceService.getAttendanceReport(req.query, req.querySchoolId);
   const response = new ApiResponse(200, report, 'Attendance report');
   res.status(response.statusCode).json(response);
 });

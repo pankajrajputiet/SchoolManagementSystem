@@ -53,8 +53,14 @@ const createStudent = async (data, userContext) => {
   return student.populate({ path: 'user', select: '-password' });
 };
 
-const getStudents = async (query) => {
+const getStudents = async (query, schoolId = null) => {
   const filter = {};
+  
+  // Add schoolId filter if provided
+  if (schoolId) {
+    filter.schoolId = schoolId;
+  }
+  
   if (query.class) filter.class = query.class;
   if (query.section) filter.section = query.section;
 

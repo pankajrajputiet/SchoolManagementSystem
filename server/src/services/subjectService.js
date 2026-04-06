@@ -22,8 +22,14 @@ const createSubject = async (data,userContext) => {
   return subject;
 };
 
-const getSubjects = async (query) => {
+const getSubjects = async (query, schoolId = null) => {
   const filter = {};
+  
+  // Add schoolId filter if provided
+  if (schoolId) {
+    filter.schoolId = schoolId;
+  }
+  
   if (query.class) filter.class = query.class;
   if (query.teacher) filter.teacher = query.teacher;
 

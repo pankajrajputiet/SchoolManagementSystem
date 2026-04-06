@@ -9,7 +9,7 @@ const create = asyncHandler(async (req, res) => {
 });
 
 const getAll = asyncHandler(async (req, res) => {
-  const result = await notificationService.getNotifications(req.query, req.user);
+  const result = await notificationService.getNotifications(req.query, req.user, req.querySchoolId);
   const response = new ApiResponse(200, result, 'Notifications fetched');
   res.status(response.statusCode).json(response);
 });

@@ -4,10 +4,12 @@ const { auth } = require('../middlewares/auth');
 const { role } = require('../middlewares/role');
 const { validate } = require('../middlewares/validate');
 const { upload } = require('../middlewares/upload');
+const { schoolAccess } = require('../middlewares/school');
 const assignmentValidation = require('../validations/assignmentValidation');
 const { ROLES } = require('../constants');
 
 router.use(auth);
+router.use(schoolAccess);
 
 router
   .route('/')

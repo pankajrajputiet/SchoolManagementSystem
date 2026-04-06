@@ -10,7 +10,7 @@ const createNotification = async (data, userId) => {
   return notification;
 };
 
-const getNotifications = async (query, user) => {
+const getNotifications = async (query, user, schoolId = null) => {
   const filter = {
     isActive: true,
     $or: [
@@ -19,6 +19,11 @@ const getNotifications = async (query, user) => {
       { targetUsers: user._id },
     ],
   };
+  
+  // Add schoolId filter if provided
+  if (schoolId) {
+    filter.schoolId = schoolId;
+  }
 
   return paginate(Notification, query, filter, [
     { path: 'createdBy', select: 'name role' },
