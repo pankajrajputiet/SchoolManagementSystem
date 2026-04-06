@@ -16,6 +16,7 @@ const getAll = asyncHandler(async (req, res) => {
 
 const getById = asyncHandler(async (req, res) => {
   const record = await attendanceService.getAttendanceById(req.params.id);
+  const response = new ApiResponse(200, record, 'Attendance record fetched');
   res.status(response.statusCode).json(response);
 });
 
