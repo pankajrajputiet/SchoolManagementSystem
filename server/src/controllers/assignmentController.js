@@ -10,7 +10,7 @@ const create = asyncHandler(async (req, res) => {
     req.user._id,
     req.files
   );
-  const response = new ApiResponse(201, 'Assignment created', assignment);
+  const response = new ApiResponse(201, assignment, 'Assignment created');
   res.status(response.statusCode).json(response);
 });
 
@@ -22,7 +22,7 @@ const getAll = asyncHandler(async (req, res) => {
 
 const getById = asyncHandler(async (req, res) => {
   const assignment = await assignmentService.getAssignmentById(req.params.id);
-  const response = new ApiResponse(200, 'Assignment fetched', assignment);
+  const response = new ApiResponse(200, assignment, 'Assignment fetched');
   res.status(response.statusCode).json(response);
 });
 
@@ -63,7 +63,7 @@ const grade = asyncHandler(async (req, res) => {
     req.params.submissionId,
     req.body
   );
-  const response = new ApiResponse(200, 'Submission graded', assignment);
+  const response = new ApiResponse(200, assignment, 'Submission graded');
   res.status(response.statusCode).json(response);
 });
 

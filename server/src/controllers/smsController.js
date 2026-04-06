@@ -108,11 +108,11 @@ const sendSMS = asyncHandler(async (req, res) => {
     await processSMSQueue(smsNotification._id);
   }
 
-  const response = new ApiResponse(200, 'SMS notification queued', {
+  const response = new ApiResponse(200, {
     id: smsNotification._id,
     totalRecipients: smsNotification.totalRecipients,
     status: smsNotification.status,
-  });
+  }, 'SMS notification queued');
 
   res.status(response.statusCode).json(response);
 });
@@ -250,7 +250,7 @@ const getSMSDetails = asyncHandler(async (req, res) => {
     throw new ApiError(404, 'SMS notification not found');
   }
 
-  const response = new ApiResponse(200, 'SMS details fetched', smsNotification);
+  const response = new ApiResponse(200, smsNotification, 'SMS details fetched');
   res.status(response.statusCode).json(response);
 });
 
@@ -346,7 +346,7 @@ const getTemplates = asyncHandler(async (req, res) => {
  */
 const getSMSServiceStatus = asyncHandler(async (req, res) => {
   const status = smsService.getStatus();
-  const response = new ApiResponse(200, 'SMS service status', status);
+  const response = new ApiResponse(200, status, 'SMS service status');
   res.status(response.statusCode).json(response);
 });
 
