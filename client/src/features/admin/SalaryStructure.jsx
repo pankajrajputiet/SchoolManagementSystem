@@ -51,6 +51,7 @@ const SalaryStructure = () => {
     staffType: 'teacher',
     designation: '',
     basicSalary: '',
+    effectiveFrom: '',
     allowances: {
       hra: '',
       da: '',
@@ -80,6 +81,9 @@ const SalaryStructure = () => {
         staffType: structure.staffType,
         designation: structure.designation,
         basicSalary: structure.basicSalary,
+        effectiveFrom: structure.effectiveFrom
+          ? structure.effectiveFrom.split('T')[0]
+          : '',
         allowances: {
           hra: structure.allowances?.hra || '',
           da: structure.allowances?.da || '',
@@ -122,6 +126,7 @@ const SalaryStructure = () => {
     try {
       const data = {
         ...formData,
+        effectiveFrom: formData.effectiveFrom,
         basicSalary: parseFloat(formData.basicSalary),
         allowances: {
           hra: parseFloat(formData.allowances.hra) || 0,
@@ -238,6 +243,7 @@ const SalaryStructure = () => {
                     <TableCell>Deductions</TableCell>
                     <TableCell>Gross Salary</TableCell>
                     <TableCell>Net Salary</TableCell>
+                    <TableCell>Effective From</TableCell>
                     <TableCell>Actions</TableCell>
                   </TableRow>
                 </TableHead>
@@ -271,6 +277,11 @@ const SalaryStructure = () => {
                       </TableCell>
                       <TableCell>${structure.grossSalary}</TableCell>
                       <TableCell><strong>${structure.netSalary}</strong></TableCell>
+                      <TableCell>
+                        {structure.effectiveFrom
+                          ? new Date(structure.effectiveFrom).toLocaleDateString()
+                          : '-'}
+                      </TableCell>
                       <TableCell>
                         <IconButton
                           size="small"
@@ -368,6 +379,16 @@ const SalaryStructure = () => {
                     label="DA"
                     value={formData.allowances.da}
                     onChange={handleAllowanceChange('da')}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    fullWidth
+                    type="date"
+                    label="Effective From"
+                    value={formData.effectiveFrom}
+                    onChange={handleChange('effectiveFrom')}
+                    InputLabelProps={{ shrink: true }}
                   />
                 </Grid>
                 <Grid item xs={6}>

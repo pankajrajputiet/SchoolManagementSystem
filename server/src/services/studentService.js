@@ -41,6 +41,8 @@ const createStudent = async (data, userContext) => {
     parentPhone: data.parentPhone,
     address: data.address,
     bloodGroup: data.bloodGroup,
+    schoolId: schoolId,
+
   });
 
   // Add student to class

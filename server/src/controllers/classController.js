@@ -10,7 +10,7 @@ const create = asyncHandler(async (req, res) => {
 
 const getAll = asyncHandler(async (req, res) => {
   const result = await classService.getClasses(req.query);
-  const response = new ApiResponse(200, 'Classes fetched', result);
+  const response = new ApiResponse(200, result,'Classes fetched');
   res.status(response.statusCode).json(response);
 });
 

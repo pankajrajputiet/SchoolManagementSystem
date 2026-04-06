@@ -10,13 +10,13 @@ router.use(auth);
 
 router
   .route('/')
-  .post(role(ROLES.ADMIN), validate(subjectValidation.createSubject), subjectController.create)
-  .get(role(ROLES.ADMIN, ROLES.TEACHER), subjectController.getAll);
+  .post(role(ROLES.ADMIN,ROLES.SCHOOL_ADMIN), validate(subjectValidation.createSubject), subjectController.create)
+  .get(role(ROLES.ADMIN,ROLES.SCHOOL_ADMIN, ROLES.TEACHER), subjectController.getAll);
 
 router
   .route('/:id')
-  .get(role(ROLES.ADMIN, ROLES.TEACHER), subjectController.getById)
-  .put(role(ROLES.ADMIN), validate(subjectValidation.updateSubject), subjectController.update)
-  .delete(role(ROLES.ADMIN), subjectController.remove);
+  .get(role(ROLES.ADMIN, ROLES.SCHOOL_ADMIN, ROLES.TEACHER), subjectController.getById)
+  .put(role(ROLES.ADMIN, ROLES.SCHOOL_ADMIN), validate(subjectValidation.updateSubject), subjectController.update)
+  .delete(role(ROLES.ADMIN, ROLES.SCHOOL_ADMIN), subjectController.remove);
 
 module.exports = router;

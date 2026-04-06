@@ -2,6 +2,7 @@ const Joi = require('joi');
 const { SECTIONS, GENDERS } = require('../constants');
 
 const createStudent = Joi.object({
+  schoolId: Joi.string().trim().required(),
   name: Joi.string().trim().max(100).required(),
   email: Joi.string().email().lowercase().trim().required(),
   password: Joi.string().min(6).max(128).required(),
@@ -18,6 +19,7 @@ const createStudent = Joi.object({
 });
 
 const updateStudent = Joi.object({
+  schoolId: Joi.string().trim().required(),
   name: Joi.string().trim().max(100).optional(),
   phone: Joi.string().allow('').optional(),
   rollNumber: Joi.string().trim().optional(),

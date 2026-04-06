@@ -3,7 +3,17 @@ const Class = require('../models/Class');
 const ApiError = require('../utils/ApiError');
 const { paginate } = require('../utils/pagination');
 
-const createSubject = async (data) => {
+const createSubject = async (data,userContext) => {
+
+    // Get schoolId from user context (logged-in school admin)
+    const schoolId = userContext?.schoolId || data.schoolId;
+    
+    data.schoolId = schoolId; // Ensure schoolId is set in the subject data
+    if (!schoolId) {
+      throw new ApiError(400, 'School ID is required. Please ensure you are logged in as a school admin.');
+    }
+  
+
   const subject = await Subject.create(data);
   // Add subject to class's subjects array
   await Class.findByIdAndUpdate(data.class, {

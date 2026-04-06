@@ -7,6 +7,7 @@ const createClass = Joi.object({
   classTeacher: Joi.string().hex().length(24).optional(),
   academicYear: Joi.string().required(),
   maxStrength: Joi.number().integer().min(1).default(40),
+  schoolId: Joi.string().trim(),
 });
 
 const updateClass = Joi.object({
@@ -15,6 +16,7 @@ const updateClass = Joi.object({
   classTeacher: Joi.string().hex().length(24).allow(null).optional(),
   academicYear: Joi.string().optional(),
   maxStrength: Joi.number().integer().min(1).optional(),
+
 });
 
 const addStudents = Joi.object({

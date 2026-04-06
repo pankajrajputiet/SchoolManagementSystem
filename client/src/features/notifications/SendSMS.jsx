@@ -43,7 +43,7 @@ const SendSMS = () => {
     skip: !targetClass,
   });
   const [sendSMS, { isLoading: sending }] = useSendSMSMutation();
-
+console.log('Templates Data:', templatesData);
   const templates = templatesData?.data || {};
   const classes = classesData?.data?.data || [];
   const students = studentsData?.data?.students || [];

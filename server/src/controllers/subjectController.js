@@ -3,7 +3,7 @@ const ApiResponse = require('../utils/ApiResponse');
 const subjectService = require('../services/subjectService');
 
 const create = asyncHandler(async (req, res) => {
-  const subject = await subjectService.createSubject(req.body);
+  const subject = await subjectService.createSubject(req.body, req.user);
   const response = new ApiResponse(201, subject, 'Subject created successfully');
   res.status(response.statusCode).json(response);
 });
