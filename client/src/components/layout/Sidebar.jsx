@@ -17,6 +17,7 @@ import SchoolIcon from '@mui/icons-material/School';
 import DashboardIcon from '@mui/icons-material/Dashboard';
 import PeopleIcon from '@mui/icons-material/People';
 import ClassIcon from '@mui/icons-material/Class';
+import MenuBookIcon from '@mui/icons-material/MenuBook';
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import EventNoteIcon from '@mui/icons-material/EventNote';
 import GradingIcon from '@mui/icons-material/Grading';
@@ -47,6 +48,7 @@ const adminNav = [
   { label: 'Students', path: '/admin/students', icon: <PeopleIcon /> },
   { label: 'Teachers', path: '/admin/teachers', icon: <SchoolIcon /> },
   { label: 'Classes', path: '/admin/classes', icon: <ClassIcon /> },
+  { label: 'Subjects', path: '/admin/subjects', icon: <MenuBookIcon /> },
   { label: 'Fees', path: '/admin/fees', icon: <PaymentsIcon /> },
   { label: 'Salary', path: '/admin/salary', icon: <AccountBalanceWalletIcon /> },
   { label: 'Salary Structure', path: '/admin/salary-structure', icon: <AssessmentIcon /> },

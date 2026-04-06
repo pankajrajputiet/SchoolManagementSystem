@@ -66,6 +66,14 @@ const adminApiSlice = apiSlice.injectEndpoints({
       query: (data) => ({ url: '/subjects', method: 'POST', data }),
       invalidatesTags: ['Subject', 'Class'],
     }),
+    updateSubject: builder.mutation({
+      query: ({ id, ...data }) => ({ url: `/subjects/${id}`, method: 'PUT', data }),
+      invalidatesTags: ['Subject', 'Class'],
+    }),
+    deleteSubject: builder.mutation({
+      query: (id) => ({ url: `/subjects/${id}`, method: 'DELETE' }),
+      invalidatesTags: ['Subject', 'Class'],
+    }),
     // Reports
     getAttendanceReport: builder.query({
       query: (params) => ({ url: '/attendance/report', params }),
@@ -92,6 +100,8 @@ export const {
   useDeleteClassMutation,
   useGetSubjectsQuery,
   useAddSubjectMutation,
+  useUpdateSubjectMutation,
+  useDeleteSubjectMutation,
   useGetAttendanceReportQuery,
   useGetMarksReportQuery,
 } = adminApiSlice;

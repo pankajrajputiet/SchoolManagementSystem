@@ -26,4 +26,10 @@ export const EXAM_TYPES = [
 export const SECTIONS = ['A', 'B', 'C', 'D'];
 export const GENDERS = ['male', 'female', 'other'];
 
+export const SUBJECT_TYPES = {
+  THEORY: 'theory',
+  PRACTICAL: 'practical',
+  ELECTIVE: 'elective',
+};
+
 export const PAGINATION_DEFAULT = { page: 1, limit: 10 };

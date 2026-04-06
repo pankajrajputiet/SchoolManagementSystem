@@ -7,6 +7,7 @@ import AdminDashboard from '@/features/admin/AdminDashboard';
 import ManageStudents from '@/features/admin/ManageStudents';
 import ManageTeachers from '@/features/admin/ManageTeachers';
 import ManageClasses from '@/features/admin/ManageClasses';
+import ManageSubjects from '@/features/admin/ManageSubjects';
 import Reports from '@/features/admin/Reports';
 import TeacherDashboard from '@/features/teacher/TeacherDashboard';
 import MarkAttendance from '@/features/teacher/MarkAttendance';
@@ -85,6 +86,7 @@ const AppRoutes = () => {
             <Route path="/admin/students" element={<ManageStudents />} />
             <Route path="/admin/teachers" element={<ManageTeachers />} />
             <Route path="/admin/classes" element={<ManageClasses />} />
+            <Route path="/admin/subjects" element={<ManageSubjects />} />
             <Route path="/admin/fees" element={<FeeManagement />} />
             <Route path="/admin/salary" element={<SalaryManagement />} />
             <Route path="/admin/salary-structure" element={<SalaryStructure />} />
