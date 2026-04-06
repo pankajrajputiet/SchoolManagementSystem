@@ -55,7 +55,7 @@ const adminNav = [
   { label: 'Reports', path: '/admin/reports', icon: <AssessmentIcon /> },
   { label: 'Send SMS', path: '/admin/sms', icon: <SmsIcon /> },
   { label: 'SMS History', path: '/admin/sms-history', icon: <HistoryIcon /> },
-  { label: 'SMS Stats', path: '/admin/sms-stats', icon: <BarChartIcon /> },
+  { label: 'SMS Status', path: '/admin/sms-stats', icon: <BarChartIcon /> },
 ];
 
 const teacherNav = [
