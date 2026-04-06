@@ -279,7 +279,11 @@ const SalaryManagement = () => {
                       </TableCell>
                       <TableCell>{STAFF_TYPES[salary.staffType] || salary.staffType}</TableCell>
                       <TableCell>${salary.grossSalary}</TableCell>
-                      <TableCell>${salary.deductions}</TableCell>
+                      <TableCell>
+                        ${typeof salary.deductions === 'object' 
+                          ? (Object.values(salary.deductions || {}).reduce((sum, val) => sum + (parseFloat(val) || 0), 0))
+                          : salary.deductions}
+                      </TableCell>
                       <TableCell><strong>${salary.netSalary}</strong></TableCell>
                       <TableCell>${salary.paidAmount}</TableCell>
                       <TableCell>${salary.balanceAmount}</TableCell>

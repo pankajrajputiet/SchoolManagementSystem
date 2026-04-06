@@ -45,8 +45,8 @@ const LoginPage = () => {
       setError('');
       const res = await login(data).unwrap();
       
-      // Backend returns: { success: true, message: { user, token }, data: "Login successful" }
-      const { user, token } = res.message || res.data;
+      // Backend returns: { success: true, message: "Login successful", data: { user, token }, statusCode: 200 }
+      const { user, token } = res.data;
       
       dispatch(setCredentials({ user, token }));
       const role = user.role;
