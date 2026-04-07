@@ -25,7 +25,7 @@ const GlobalLoader = () => {
 
 
   return (
-    <Box  display="flex" alignItems="center" justifyContent="center" width="100%" gap={0.5}>
+    <Box display="flex" alignItems="center" justifyContent="center" width="100%" gap={0.5}>
       <Dot delay="0s" />
       <Dot delay="0.15s" />
       <Dot delay="0.3s" />
