@@ -19,7 +19,7 @@ import {
 import BusinessIcon from '@mui/icons-material/Business';
 import { useLoginMutation } from './authApiSlice';
 import { setCredentials } from './authSlice';
-
+import ThreeDotLoader from '../../components/ThreeDotLoader';
 const schema = yup.object({
   email: yup.string().email('Invalid email').required('Email is required'),
   password: yup.string().required('Password is required'),
@@ -145,7 +145,8 @@ const LoginPage = () => {
               disabled={isLoading}
               sx={{ mt: 2 }}
             >
-              {isLoading ? <CircularProgress size={24} /> : 'Sign In'}
+              {/* {isLoading ? <CircularProgress size={24} /> : 'Sign In'} */}
+              {isLoading ? <ThreeDotLoader /> : 'Sign In'}
             </Button>
           </form>
 
