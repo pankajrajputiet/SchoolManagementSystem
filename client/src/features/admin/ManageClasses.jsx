@@ -33,7 +33,7 @@ const ManageClasses = () => {
 
   const openAdd = () => {
     setEditClass(null);
-    reset({ name: '', section: 'A', academicYear: '2025-2026', maxStrength: 40, classTeacher: '' });
+    reset({ name: '', section: 'A', academicYear: '2026-2027', maxStrength: 40, classTeacher: '' });
     setFormOpen(true);
   };
 
@@ -121,7 +121,7 @@ const ManageClasses = () => {
                 </TextField>
               )} />
               <Controller name="academicYear" control={control} rules={{ required: 'Required' }} render={({ field }) => (
-                <TextField fullWidth label="Academic Year" placeholder="2025-2026" {...field} />
+                <TextField fullWidth label="Academic Year" placeholder="2026-2027" {...field} />
               )} />
             </Box>
             <Box className="grid grid-cols-2 gap-3">

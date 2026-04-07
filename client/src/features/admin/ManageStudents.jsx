@@ -33,6 +33,7 @@ const schema = yup.object({
 });
 
 const ManageStudents = () => {
+  const user = JSON.parse(localStorage.getItem('user'));
   const [page, setPage] = useState(0);
   const [pageSize, setPageSize] = useState(10);
   const [search, setSearch] = useState('');
@@ -74,6 +75,7 @@ const ManageStudents = () => {
 
   const onSubmit = async (formData) => {
     try {
+      formData.schoolId = user.schoolId;
       setError('');
       if (editStudent) {
         await updateStudent({ id: editStudent._id, ...formData }).unwrap();

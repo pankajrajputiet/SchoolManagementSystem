@@ -3,7 +3,7 @@ const ApiResponse = require('../utils/ApiResponse');
 const studentService = require('../services/studentService');
 
 const create = asyncHandler(async (req, res) => {
-  const student = await studentService.createStudent(req.body, req.user);
+  const student = await studentService.createStudent(req.body);
   const response = new ApiResponse(201, student, 'Student created successfully');
   res.status(response.statusCode).json(response);
 });
