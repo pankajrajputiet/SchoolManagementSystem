@@ -17,7 +17,7 @@ router.post(
   attendanceController.markAttendance
 );
 
-router.get('/', role(ROLES.ADMIN, ROLES.TEACHER), attendanceController.getAll);
+router.get('/', role(ROLES.ADMIN, ROLES.TEACHER, ROLES.STUDENT), attendanceController.getAll);
 
 router.get('/report', role(ROLES.ADMIN, ROLES.TEACHER), attendanceController.getReport);
 
